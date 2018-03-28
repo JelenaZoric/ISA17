@@ -11,6 +11,8 @@ import org.springframework.data.repository.Repository;
 public interface UserRepository extends Repository<User1, Long> {
 	Page<User1> findAll(Pageable pageable);
 	
+	List<User1> findAll();
+	
 	List<User1> findByName(String name);
 
 	Page<User1> findByNameContainingAndLastnameContainingAllIgnoringCase(String name,

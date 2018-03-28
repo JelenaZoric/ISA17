@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="scripts/jquery-3.2.1.min.js"></script>
+		<script src="scripts/tether.min.js"></script>
+		<script src="scripts/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="stylesheets/design.css">
+		<link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Homepage</title>
+		<script>
+		$(document).ready(function() {
+			$.ajax({
+				url: "http://localhost:8090/myapp/theaters/getTheaters"
+			}).then(function(data) {
+				for(i=0; i<data.length; i++) {
+					newRow = "<tr>"
+						+ "<td class=\"name\">" + data[i].name + "</td>"
+						+ "</tr>"
+					$("#dataTable").append(newRow)
+				}
+			});
+		});
+		</script>
+	</head>
+	<body>
+		<h1>Pozorišta</h1>
+		<table id="dataTable" class="table">
+			<tr class="header">
+				<th>Naziv</th>
+			</tr>
+		</table>
+	</body>
+</html>

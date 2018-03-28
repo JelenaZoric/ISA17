@@ -1,5 +1,7 @@
 package isa.projekat.service;
 
+import java.util.List;
+
 import isa.projekat.model.User1;
 import isa.projekat.repository.UserRepository;
 
@@ -7,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+@Transactional
 @Service
 public class UserServiceImpl implements UserService{
 	
@@ -37,10 +41,15 @@ public class UserServiceImpl implements UserService{
 						lastname.trim(), pageable);
 	}
 
-	public User1 getUser(String name, String lastname) {
+	public User1 findOne(String name, String lastname) {
 		Assert.notNull(name, "Ime ne sme biti null");
 		Assert.notNull(lastname, "Prezime ne sme biti null");
 		return this.userRepository.findByNameAndLastnameAllIgnoringCase(name, lastname);
+	}
+
+	@Override
+	public List<User1> findAll() {
+		return userRepository.findAll();
 	}
     
 
