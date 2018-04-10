@@ -33,19 +33,27 @@ public class User1 implements Serializable {
 	private String email;
 	
 	@Column(nullable = false)
+	private String password;
+	
+	@Column(nullable = false)
 	private String phone;
+	
+	@Column(nullable = false)
+	private String enabled;
 
 	public User1() {
 		
 	}
 
-	public User1(String name, String state, String city, String mail, String phone) {
+	public User1(String name, String state, String city, String mail, String password, String phone, String enabled) {
 		super();
 		this.name = name;
 		this.lastname = state;
 		this.city = city;
 		this.email = mail;
+		this.password = password;
 		this.phone = phone;
+		this.enabled = "false";
 	}
 
 
@@ -74,6 +82,28 @@ public class User1 implements Serializable {
 	
 	public String getPhone() {
 		return this.phone;
+	}
+	
+	public String getPassword() {
+		return this.password;
+	}
+	
+	
+
+	public String getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(String enabled) {
+		this.enabled = enabled;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	@Override

@@ -6,17 +6,10 @@ import isa.projekat.model.User1;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends Repository<User1, Long> {
-	Page<User1> findAll(Pageable pageable);
+@Repository
+public interface UserRepository extends JpaRepository<User1, Long> {
 	
-	List<User1> findAll();
-	
-	List<User1> findByName(String name);
-
-	Page<User1> findByNameContainingAndLastnameContainingAllIgnoringCase(String name,
-			String lastname, Pageable pageable);
-
-	User1 findByNameAndLastnameAllIgnoringCase(String name, String lastname);
 }

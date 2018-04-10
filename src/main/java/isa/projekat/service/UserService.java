@@ -11,7 +11,11 @@ public interface UserService {
 
 	Page<User1> findUsers(String criteria, Pageable pageable);
 
-	User1 findOne(String name, String lastname);
+	User1 findOne(Long id);
 	
 	List<User1> findAll();
+	
+	User1 save(User1 user);
+	
+	List<User1> save(List<User1> users);
 }

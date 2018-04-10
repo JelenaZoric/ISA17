@@ -19,41 +19,32 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Override
 	public Page<User1> findUsers(String criteria, Pageable pageable) {
-		Assert.notNull(criteria, "Kriterijum ne sme biti null");
-
-		if (!StringUtils.hasLength(criteria)) {
-			return this.userRepository.findAll(null);
-		}
-
-		String lastname = "";
-		int splitPos = criteria.lastIndexOf(",");
-
-		if (splitPos >= 0) {
-			lastname = criteria.substring(splitPos + 1);
-			criteria = criteria.substring(0, splitPos);
-		}
-
-		return this.userRepository
-				.findByNameContainingAndLastnameContainingAllIgnoringCase(criteria.trim(),
-						lastname.trim(), pageable);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public User1 findOne(String name, String lastname) {
-		Assert.notNull(name, "Ime ne sme biti null");
-		Assert.notNull(lastname, "Prezime ne sme biti null");
-		return this.userRepository.findByNameAndLastnameAllIgnoringCase(name, lastname);
+	@Override
+	public User1 findOne(Long id) {
+		return userRepository.findOne(id);
 	}
 
 	@Override
 	public List<User1> findAll() {
 		return userRepository.findAll();
 	}
-    
 
+	@Override
+	public User1 save(User1 user) {
+		return userRepository.save(user);
+	}
 
+	@Override
+	public List<User1> save(List<User1> users) {
+		return userRepository.save(users);
+	}
 
 
 
