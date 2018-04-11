@@ -30,6 +30,11 @@ public class UserServiceImpl implements UserService{
 	public User1 findOne(Long id) {
 		return userRepository.findOne(id);
 	}
+	
+	@Override
+	public User1 getUser(String email, String password) {
+		return userRepository.findByEmailAndPassword(email, password);
+	}
 
 	@Override
 	public List<User1> findAll() {

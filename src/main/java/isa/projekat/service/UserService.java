@@ -13,6 +13,8 @@ public interface UserService {
 
 	User1 findOne(Long id);
 	
+	User1 getUser(String email, String password);
+	
 	List<User1> findAll();
 	
 	User1 save(User1 user);

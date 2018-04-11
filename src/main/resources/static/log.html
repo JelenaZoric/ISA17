@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Logovanje</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="scripts/jquery-3.2.1.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="bootstrap.css" type="text/css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
+<body>
+	<div style = "float: right; position: absolute; left: 1000px">
+		<form accept-charset="utf-8" name="prijavaForma" id="inputForm">
+		 	<div class="form-group" style="width: 400px">
+		 		
+	    			<label>Email:</label>
+	    			
+	    			<input type="text" class="form-control" name = "logMail" placeholder = "Unesite email">
+	    		</div>
+	  		 <div class="form-group" style="width: 400px">
+	  		 	
+	    			<label>Lozinka:</label>
+	    			<input type="password" class="form-control" id="loz" name="logPass" placeholder = "Unesite lozinku">
+	  		
+	  		
+	  		
+	  		
+	  		</div>
+	  		
+	  		<button type="submit" name="dugmePrijava" id="log" class="btn btn-default">Ulogujte se</button>
+	  	
+	  	<script type="text/javascript">
+	  	$("#log").click(function() {
+	  		//document.write("Dobar dan!");
+	  		 formData = JSON.stringify({
+	  	          email:$("#inputForm [name='logMail']").val(),
+	  	          password:$("#inputForm [name='logPass']").val()
+	  	      });
+	  		$.ajax({
+				url: "http://localhost:8090/myapp/users/log",
+				type: "POST",
+				data: formData,
+				//saljemo json i ocekujemo json nazad
+				contentType: "application/json",
+				datatype: 'json'
+			});
+	  	});
+	  	</script>
+	  	
+	  	</form>
+	</div>
+</body>
+</html>

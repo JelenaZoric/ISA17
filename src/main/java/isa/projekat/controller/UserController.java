@@ -100,4 +100,27 @@ public class UserController {
 		return new ResponseEntity<>(newUser, HttpStatus.OK);
 		//return "redirect:theaters";
 	}
+	
+	//@RequestMapping(value = "/log")
+	@RequestMapping(method=RequestMethod.POST, value = "/log", consumes="application/json")
+	public ResponseEntity<User1> logUser(@RequestBody User1 user){
+		User1 logedUser = userService.getUser(user.getEmail(), user.getPassword());
+		/*if(logedUser.getEmail() == null){
+			System.out.println("pogresan email!");
+		}
+		if(logedUser.getPassword() == null){
+			System.out.println("pogresna sifra!");
+		}*/
+		if(logedUser == null){
+			System.out.println("Pogresna kombinacija emaila i sifre!");
+		}
+		//System.out.println("-------------------" + logedUser.getEmail() + " ---- " + logedUser.getPassword());
+		else if(logedUser.getEmail() != null && logedUser.getPassword() != null){
+			System.out.println("Korisnik " + logedUser.getName() + " se uspesno ulogovao!");
+		}
+	/*	else{
+			System.out.println("Pogresna kombinacija emaila i sifre!");
+		} */
+		return new ResponseEntity<>(logedUser, HttpStatus.OK);
+	}
 }
