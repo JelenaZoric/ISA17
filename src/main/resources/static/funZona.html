@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="scripts/jquery-3.2.1.min.js"></script>
+		<script src="scripts/tether.min.js"></script>
+		<script src="scripts/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="stylesheets/design.css">
+		<link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Fan Zona</title>
+		
+    </head>
+		<body>
+		<p>
+		Korisnik:
+		<br/>
+		<img src="images/korisnik.ico">
+		</p>
+		<button id="noviOglas" href="#inputModal" data-toggle="modal" data-target="#inputModal">
+		Novi oglas
+		</button>
+		<br/>
+		<br/>
+		<button>
+		Aktivni oglasi
+		</button>
+		<br/>
+<div class="tab" style=" position:absolute; left:500px; top:10px">
+  <button class="tablinks" onclick="openAD(event, 'Prodavnica')" id="defaultOpen">Prodavnica</button>
+  <button class="tablinks" onclick="openAD(event, 'Oglasi')">Oglasi</button>
+
+</div>
+
+<div id="Prodavnica" class="tabcontent" style=" float: right; position:absolute; left:500px; top:30px">
+  <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+  <h3>Prodavnica</h3>
+  <!--<img src="images/primer.jpg">-->
+  
+  <table id="dataTable" class="table">
+  <tr class="header">
+				<th>Naziv oglasa: </th>
+				<th>Opis: </th>
+				<th>Datum isteka oglasa: </th>
+				<th>Slika: </th>
+			</tr>		
+  </table>
+  
+   <script type="text/javascript">
+$(document).ready(
+		function() {
+			$.ajax({
+				url : "http://localhost:8090/myapp/ads/getAds"
+			}).then(
+					function(data) {
+						for (i = 0; i < data.length; i++) {
+							if(data[i].reservationStatus==true){
+							newRow = 
+								"<tr>"
+									+ "<td class=\"name\">" + data[i].name + "</td>"
+									+ "<td class=\"description\">" + data[i].description + "</td>"
+									+ "<td class=\"date\">" + data[i].date + "</td>"
+									+ "<td class=\"image\">" + data[i].image + "</td>"
+								
+										+ "<td class=\"reservation\" id=\"" +data[i].id+ "\"> <button name=\"reservation\"  id=\"reservation\" disabled> rezervisano </button> </td>"	
+										+ "</tr>"
+										$("#dataTable").append(newRow)		
+							}else{
+								newRow = 
+									"<tr>"
+										+ "<td class=\"name\">" + data[i].name + "</td>"
+										+ "<td class=\"description\">" + data[i].description + "</td>"
+										+ "<td class=\"date\">" + data[i].date + "</td>"
+										+ "<td class=\"image\">" + data[i].image + "</td>"
+										+ "<td class=\"reservation\" id=\"" +data[i].id+ "\"> <button name=\"reservation\"  id=\"reservation\"> rezerviši </button> </td>"
+										+ "</tr>"
+											$("#dataTable").append(newRow)	
+									
+									}
+									
+						}  
+					});
+			$(document).on("click", ".reservation", function(event) {
+				
+				
+				
+				//var url = $(this).attr("href")
+				
+				alert($(this).attr('id'))
+				var id = $(this).attr('id')
+		
+        
+				
+		var url  =  "http://localhost:8090/myapp/ads/2"
+				$.ajax({
+					url: url,
+		        	type: "GET",
+		        	success: function(){
+		        		//ukloni i na strani 
+						alert("EEEE")
+		        		alert(url + "URL")
+			        }
+					
+					
+				});
+				
+			});
+		 //   document.write("Dobar dan!");
+		      
+	        $("#add").click(function(){
+//pripremamo JSON koji cemo poslati
+            formData=JSON.stringify({
+            	 name:$("#inputForm [name='name']").val(),
+                 description:$("#inputForm [name='description']").val(),
+                 date:$("#inputForm [name='date']").val(),
+                 image:$("#inputForm [name='image']").val()
+            });
+	       $.ajax({
+	        url: "http://localhost:8090/myapp/ads",
+	   		type: "POST",
+	   		data: formData,
+	   		//saljemo json i ocekujemo json nazad
+	   		contentType: "application/json",
+	   		datatype: 'json',
+	    	   success: function(data){
+	    		   
+	    		  
+	    		   newRow = 
+							"<tr>"
+								+ "<td class=\"name\">" + data.name + "</td>"
+								+ "<td class=\"description\">" + data.description + "</td>"
+								+ "<td class=\"date\">" + data.date + "</td>"
+								+ "<td class=\"image\">" + data.image + "</td>"
+								+ "<td class=\"reservation\" id=\"" +data.id+ "\"> <button name=\"reservation\"  id=\"reservation\"> rezerviši </button> </td>"
+							+ "</tr>"
+							
+						$("#dataTable").append(newRow)
+						$("#dataTable1").append(newRow)
+	    	   }
+	      
+	       });
+	      
+	       $('#inputModal').modal('toggle');
+	        
+	        });
+			
+		});
+
+			</script>
+</div>
+<!-- </div> -->
+
+<div id="Oglasi" class="tabcontent" style=" float: right; position:absolute; left:500px; top:30px">
+  <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+  <h3>Oglasi</h3>
+  <p>Odobreni i neodobreni oglasi</p> 
+  
+  
+  <table id="dataTable1" class="table">
+  <tr class="header">
+				<th>Naziv oglasa: </th>
+				<th>Opis: </th>
+				<th>Datum isteka oglasa: </th>
+				<th>Slika: </th>
+			</tr>		
+  </table>
+</div>
+
+<div class="modal fade" id="inputModal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Novi Oglas</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <form id="inputForm">
+		      <div class="modal-body">
+					<input type="hidden" name="id" id="id" />			
+				<p>
+					<label for="name">Naziv</label> <input type="text" name="name"
+						id="name" />
+				</p>
+				<p>
+					<label for="description">Opis</label> <input type="text" name="description"
+						id="description" />
+				</p>
+				<p>
+					<label for="date">Datum isteka oglasa: </label> <input type="date" name="date"
+						id="date" />
+				</p>
+				<p>
+					<label for="image">slika(opciono):  </label> <input type="file" name="image"
+						id="image" />
+				</p>		
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+		        <button type="button" class="btn btn-primary" id="add">Potvrda</button>
+		        
+		    
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+
+<script>
+function openAD(evt, ADName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(ADName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+function extractFilename(path) {
+	  if (path.substr(0, 12) == "C:\\fakepath\\")
+	    return path.substr(12); // modern browser
+	  var x;
+	  x = path.lastIndexOf('/');
+	  if (x >= 0) // Unix-based path
+	    return path.substr(x+1);
+	  x = path.lastIndexOf('\\');
+	  if (x >= 0) // Windows-based path
+	    return path.substr(x+1);
+	  return path; // just the file name
+	}
+$("#noviOglas").click(function(){
+	noviOglas()
+ });
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+
+</script>
+   
+		</body>
+</html>
