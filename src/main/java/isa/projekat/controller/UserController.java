@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -105,22 +106,20 @@ public class UserController {
 	@RequestMapping(method=RequestMethod.POST, value = "/log", consumes="application/json")
 	public ResponseEntity<User1> logUser(@RequestBody User1 user){
 		User1 logedUser = userService.getUser(user.getEmail(), user.getPassword());
-		/*if(logedUser.getEmail() == null){
-			System.out.println("pogresan email!");
-		}
-		if(logedUser.getPassword() == null){
-			System.out.println("pogresna sifra!");
-		}*/
+		
 		if(logedUser == null){
 			System.out.println("Pogresna kombinacija emaila i sifre!");
+			return new ResponseEntity<>(logedUser, HttpStatus.NOT_FOUND);
 		}
-		//System.out.println("-------------------" + logedUser.getEmail() + " ---- " + logedUser.getPassword());
-		else if(logedUser.getEmail() != null && logedUser.getPassword() != null){
-			System.out.println("Korisnik " + logedUser.getName() + " se uspesno ulogovao!");
-		}
-	/*	else{
-			System.out.println("Pogresna kombinacija emaila i sifre!");
-		} */
+		
+		System.out.println("Korisnik " + logedUser.getName() + " se uspesno ulogovao!");
 		return new ResponseEntity<>(logedUser, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="getUser", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<User1> getUser(@RequestParam("id") Long id){
+		User1 user = userService.findOne(id);
+		return new ResponseEntity<User1>(user, HttpStatus.OK);
 	}
 }

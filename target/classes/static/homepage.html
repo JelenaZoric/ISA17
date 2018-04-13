@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pocetna strana</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="scripts/jquery-3.2.1.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="aa">
+	<a href="#pozorista">Lista pozorista</a>
+	<a href="#bioskopi">Lista bioskopa</a>
+	<a href="#prijatelji">Lista prijatelja</a>
+	<a id = "profil" href="profile.html">Profil</a>
+	
+	<p></p>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$.ajax({
+				url: "http://localhost:8090/myapp/users/getUsers"
+			}).then(function(data) {
+				for(i=0; i<data.length; i++){
+					if(data[i].email==localStorage.getItem("email")){
+						nastavak= "<a href=\"profile.html?id=" + data[i].id + "\">Profil</a>"
+						$("p").append(nastavak);
+					}
+				}
+			})
+		})
+	</script>  
+</div>
+	
+	
+	<div id="pozorista">
+		<table id="theatre" class = "table" style="width: 1200px">
+			<tr class="header">
+				<th>Pozorista</th>
+			</tr>
+		</table>
+		
+		<script>
+		$(document).ready(function() {
+			$.ajax({
+				url: "http://localhost:8090/myapp/theaters/getTheaters"
+			}).then(function(data) {
+				for(i=0; i<data.length; i++) {
+					if()
+					newRow = "<tr>"
+						+ "<td class=\"name\">" + data[i].name + "</td>"
+						+ "</tr>"
+					$("#theatre").append(newRow)
+				}
+			});
+		});
+		</script>
+		
+	</div>
+	
+	<div id="bioskopi">
+		<table class = "table" style="width: 1200px">
+			<tr class="header">
+				<th>Bioskopi</th>
+			</tr>
+		</table>
+	</div>
+	
+	<div id="prijatelji">
+		<table class = "table" style="width: 1200px">
+		<thead>
+			<tr>
+				<th><h3>Prijatelji</h3></th>
+			</tr>
+		</thead>
+		</table>
+	</div>
+</body>
+</html>
