@@ -15,9 +15,17 @@
 			}).then(function(data) {
 				for(i=0; i<data.length; i++) {
 					newRow = "<tr>"
-						+ "<td class=\"name\">" + data[i].name + "</td>"
+						+ "<td class=\"name\" width=40%><a href=\"theaterProfile.html?id="
+						+ data[i].id + "\">"
+						+ data[i].name + "</td>"
+						+ "<td class=\"address\" width = 30%>" + data[i].address + "</td>"
+						+ "<td class=\"city\" width=30%>" + data[i].city + "</td>"
 						+ "</tr>"
-					$("#dataTable").append(newRow)
+					if(data[i].ttype == 't') {
+						$("#theaterTable").append(newRow)
+					} else {
+						$("#cinemaTable").append(newRow)
+					}
 				}
 			});
 		});
@@ -25,9 +33,19 @@
 	</head>
 	<body>
 		<h1>Pozorišta</h1>
-		<table id="dataTable" class="table">
+		<table id="theaterTable" class="table">
 			<tr class="header">
 				<th>Naziv</th>
+				<th>Adresa</th>
+				<th>Grad</th>
+			</tr>
+		</table>
+		<h1>Bioskopi</h1>
+		<table id="cinemaTable" class="table">
+			<tr class="header">
+				<th>Naziv</th>
+				<th>Adresa</th>
+				<th>Grad</th>
 			</tr>
 		</table>
 	</body>

@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,5 +29,12 @@ public class TheaterController {
 	public ResponseEntity<List<Theater>> getTheaters() {
 		List<Theater> theaters = theaterRepository.findAll();
 		return new ResponseEntity<List<Theater>>(theaters,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="getTheater", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Theater> getTheater(@RequestParam("id") Long id) {
+		Theater theater = theaterService.findOne(id);
+		return new ResponseEntity<Theater>(theater, HttpStatus.OK);
 	}
 }

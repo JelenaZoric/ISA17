@@ -20,5 +20,14 @@ public class TheaterServiceImpl implements TheaterService {
 	public List<Theater> findAll() {
 		return theaterRepository.findAll();
 	}
+	
+	@Override
+	public Theater findOne(Long id) {
+		return theaterRepository.findOne(id);
+	}
 
+	@Override
+	public Theater save(Theater theater) {
+		return theaterRepository.save(theater);
+	}
 }

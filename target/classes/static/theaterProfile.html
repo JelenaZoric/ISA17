@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="scripts/jquery-3.2.1.min.js"></script>
+<script src="scripts/tether.min.js"></script>
+<script src="scripts/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="stylesheets/design.css">
+<link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Profil</title>
+<script>
+function addProgram(value1, value2, set) {
+	newRow = "<tr><td><a href=\"playProfile.html?id=" + value1.id + "\">" + value1.name + "</td><td>"
+			+ value1.director + "</td><td>"
+			+ value1.avgScore + "</td>"
+			+ "</tr>"
+	$("#programTable").append(newRow)
+}
+	var url_string = window.location.href;
+	var url = new URL(url_string);
+	var id = url.searchParams.get("id");
+	//console.log(id);
+	$(document).ready(function() {
+		$.ajax({
+			
+			url:"http://localhost:8090/myapp/theaters/getTheater?id=" + id
+		}).then(function(data) {
+			rows = "<tr><td class=\"name\">" + data.name + "</td></tr>"
+				+ "<tr><td class=\"address\">" + data.address + "</td></tr>"
+				+ "<tr><td class=\"city\">" + data.city + "</td></tr>"
+				+ "<tr><td class=\"description\">Opis:" + data.description + "</td></tr>"
+			$("#dataTable").append(rows)
+			data.program.forEach(addProgram)
+		});
+	});
+	
+</script>
+</head>
+<body>
+	<h2>Profil pozorišta</h2>
+	<table id="dataTable" class="table">
+	</table>
+	<h3>Program</h3>
+	<table id="programTable" class="table">
+		<tr><th>Naziv</th>
+			<th>Režija</th>
+			<th>Prosečna ocena</th>
+		</tr>
+	</table>
+</body>
+</html>

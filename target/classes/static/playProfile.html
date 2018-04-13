@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="scripts/jquery-3.2.1.min.js"></script>
+		<script src="scripts/tether.min.js"></script>
+		<script src="scripts/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="stylesheets/design.css">
+		<link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Homepage</title>
+		<script>
+		var url_string = window.location.href;
+		var url = new URL(url_string);
+		var id = url.searchParams.get("id");
+		$(document).ready(function() {
+			$.ajax({
+				
+				url:"http://localhost:8090/myapp/plays/getPlay?id=" + id
+			}).then(function(data) {
+				rows = "<tr><td class=\"name\">" + data.name + "</td></tr>"
+					+ "<tr><td class=\"address\">" + data.genre + "</td></tr>"
+					+ "<tr><td class=\"city\">" + data.director + "</td></tr>"
+					+ "<tr><td class=\"description\">Opis:" + data.description + "</td></tr>"
+				$("#dataTable").append(rows)
+			});
+		});
+		</script>
+	</head>
+	<body>
+		<h2>Profil predstave</h2>
+		<table id="dataTable" class="table">
+		</table>
+	</body>
+</html>

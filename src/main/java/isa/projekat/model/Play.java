@@ -56,10 +56,9 @@ public class Play implements Serializable {
 	
 	public Play() {}
 
-	public Play(Long id, String name, String genre, String director,
+	public Play(String name, String genre, String director,
 			int duration, float avgScore, String description, int price) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.genre = genre;
 		this.director = director;
@@ -67,6 +66,19 @@ public class Play implements Serializable {
 		this.avgScore = avgScore;
 		this.description = description;
 		this.price = price;
+	}
+	
+	public Play(String name, String genre, String director,
+			int duration, float avgScore, String description, int price, Theater theater) {
+		super();
+		this.name = name;
+		this.genre = genre;
+		this.director = director;
+		this.duration = duration;
+		this.avgScore = avgScore;
+		this.description = description;
+		this.price = price;
+		this.theater = theater;
 	}
 
 	public Long getId() {
