@@ -25,6 +25,7 @@ public class Theater implements Serializable {
 	private static final long serialVersionUID = 5744795584730331422L;
 	@Id
 	@GeneratedValue(strategy = javax.persistence.GenerationType.AUTO)
+	@Column(name = "theater_id")
 	private Long id;
 	
 	@Column(nullable = false)

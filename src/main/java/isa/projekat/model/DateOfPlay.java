@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
 @Entity
-@Table(name = "date")
+@Table(name = "date_of_play")
 public class DateOfPlay {
 	
 	@Id
@@ -24,8 +24,8 @@ public class DateOfPlay {
 	@Column(name = "date_id")
 	private Long id;
 
-	@Column(nullable=false)
-	private Date date;
+	@Column(nullable=false, name="date_")
+	private String date;
 	
 	//@OneToMany(fetch = FetchType.LAZY, mappedBy = "date")
 	@OneToMany(cascade = CascadeType.ALL)
@@ -37,7 +37,7 @@ public class DateOfPlay {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DateOfPlay(Date date, Set<Hall> halls) {
+	public DateOfPlay(String date, Set<Hall> halls) {
 		super();
 		this.date = date;
 		this.halls = halls;
@@ -51,11 +51,11 @@ public class DateOfPlay {
 		this.id = id;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 

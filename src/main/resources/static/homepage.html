@@ -14,30 +14,85 @@
 	<a href="#pozorista">Lista pozorista</a>
 	<a href="#bioskopi">Lista bioskopa</a>
 	<a href="#prijatelji">Lista prijatelja</a>
-	<a id = "profil" href="profile.html">Profil</a>
 	
 	<p></p>
-	<script type="text/javascript">
+	 
+		<h2>Istorija posecivanja pozorista i bioskopa</h2>
+		<table id="history" class = "table" style="width: 1200px">
+			<tr class="header">
+				<th>Pozoriste</th>
+				<th>Adresa</th>
+			</tr>
+		</table>
+		
+		<table id="historyCinema" class = "table" style="width: 1200px">
+			<tr class="header">
+				<th>Bioskop</th>
+				<th>Adresa</th>
+			</tr>
+		</table>
+		
+		<script type="text/javascript">
 		$(document).ready(function(){
 			$.ajax({
 				url: "http://localhost:8090/myapp/users/getUsers"
 			}).then(function(data) {
 				for(i=0; i<data.length; i++){
 					if(data[i].email==localStorage.getItem("email")){
-						nastavak= "<a href=\"profile.html?id=" + data[i].id + "\">Profil</a>"
+						nastavak= "<a href=\"profile.html?id=" + data[i].id + "\">" + data[i].name + " " + data[i].lastname + "</a>"
 						$("p").append(nastavak);
+						//$("#history").append(data[i].theaters[0].name);
+						for(j=0; j<data[i].theaters.length; j++){
+							if(data[i].theaters[j].ttype=='t'){
+								newRow = "<tr>" + "<td class=\"code\">" + data[i].theaters[j].name + "</td>"
+										+ "<td>" + data[i].theaters[j].address + "</td></tr>"
+								$("#history").append(newRow)
+							}
+							if(data[i].theaters[j].ttype=='c'){
+								newRow = "<tr>" + "<td class=\"code\">" + data[i].theaters[j].name + "</td>"
+										+ "<td>" + data[i].theaters[j].address + "</td></tr>"
+								$("#historyCinema").append(newRow)
+							}
+						}
 					}
 				}
 			})
 		})
-	</script>  
-</div>
-	
+	</script> 
+		
+	</div>
 	
 	<div id="pozorista">
+	<h2>Bioskopi i pozorista dostupni za rezervacije</h2>
 		<table id="theatre" class = "table" style="width: 1200px">
 			<tr class="header">
 				<th>Pozorista</th>
+				<th></th>
+			</tr>
+		</table>
+		
+		<table id="cinema" class = "table" style="width: 1200px">
+			<tr class="header">
+				<th>Bioskopi</th>
+				<th></th>
+			</tr>
+		</table>
+		
+		<h3 id="playy"></h3>
+		<table id="play" class = "table" style="width: 1200px">
+		
+			<tr class="header">
+				<th></th>
+				<th></th>
+			</tr> 
+			<tbody id="playBody"></tbody>
+		</table>
+		
+		<h3 id="date"></h3>
+		<table id="dateTable" class = "table" style="width: 1200px">
+			<tr class="header">
+				<th></th>
+				<th></th>
 			</tr>
 		</table>
 		
@@ -47,24 +102,72 @@
 				url: "http://localhost:8090/myapp/theaters/getTheaters"
 			}).then(function(data) {
 				for(i=0; i<data.length; i++) {
-					if()
-					newRow = "<tr>"
-						+ "<td class=\"name\">" + data[i].name + "</td>"
-						+ "</tr>"
-					$("#theatre").append(newRow)
+					if(data[i].ttype=='t'){
+						newRow = "<tr>"
+							+ "<td class=\"name\">" + data[i].name + "</td>"
+							+ "<td><a onclick=\"myFunction(" + data[i].id + ",'" + data[i].name +"')\" href=\"#" + data[i].id + "\">Izaberi ovo pozoriste</a></td>"
+							+ "</tr>"
+						$("#theatre").append(newRow)
+						
+					}
+					if(data[i].ttype=='c'){
+						newRow = "<tr>"
+							+ "<td class=\"name\">" + data[i].name + "</td>"
+							+ "</tr>"
+						$("#cinema").append(newRow)
+					}
 				}
 			});
+			
 		});
+		function myFunction(id, name) {
+			$("#playy").empty();
+			$("#playy").append("Izaberite predstavu iz pozorista " + name)
+			var url_string = window.location.href;
+			console.log(url_string);
+			//var url = new URL(url_string);
+			//var id = url_string.substring(url_string.lastIndexOf('#') + 1);
+			console.log(id)
+			// document.getElementById("theatre").style.color = "red";
+			 $.ajax({
+					url: "http://localhost:8090/myapp/theaters/getTheater?id=" + id
+				}).then(function(data) {
+					$("#play").empty();
+					for(i=0; i<data.program.length; i++) {
+							newRow = "<tr>"
+								+ "<td class=\"name\">" + data.program[i].name + "</td>"
+								+ "<td><a onclick=\"myFunctionDate(" + data.program[i].id + ",'" + data.program[i].name +"')\" href=\"#" + data.program[i].id + "\">Izaberi ovu predstavu</a></td>"
+								+ "</tr>"
+							$("#play").append(newRow)
+					}
+				});
+		}
+		function myFunctionDate(id,name) {
+			$("#date").empty();
+			$("#date").append("Izaberite datum za predstavu " + name)
+			var url_string = window.location.href;
+			console.log(url_string);
+			console.log(id)
+			 //document.getElementById("theatre").style.color = "red";
+			 $.ajax({
+					url: "http://localhost:8090/myapp/plays/getPlay?id=" + id
+				}).then(function(data) {
+					$("#dateTable").empty();
+					for(i=0; i<data.dates.length; i++) {
+							newRow = "<tr>"
+								+ "<td class=\"name\">" + data.dates[i].date + "</td>"
+								+ "<td><a onclick=\"myFunction()\" href=\"#\">Izaberi ovaj datum</a></td>"
+								+ "</tr>"
+							$("#dateTable").append(newRow)
+					}
+				});
+		}
 		</script>
 		
 	</div>
 	
 	<div id="bioskopi">
-		<table class = "table" style="width: 1200px">
-			<tr class="header">
-				<th>Bioskopi</th>
-			</tr>
-		</table>
+		
 	</div>
 	
 	<div id="prijatelji">

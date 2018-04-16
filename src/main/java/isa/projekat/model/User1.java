@@ -1,12 +1,17 @@
 package isa.projekat.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
 
 
 @Entity
@@ -18,6 +23,7 @@ public class User1 implements Serializable {
 	private static final long serialVersionUID = 3401692146417660242L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "user_id")
 	private Long id;
 
 	@Column(nullable = false)
@@ -40,23 +46,27 @@ public class User1 implements Serializable {
 	
 	@Column(nullable = false)
 	private String enabled;
+	
+	@ManyToMany
+	@JoinTable(name = "user_theater", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "theater_id") })
+	private Set<Theater> theaters = new HashSet<Theater>();
 
 	public User1() {
 		
 	}
 
-	public User1(String name, String state, String city, String mail, String password, String phone, String enabled) {
+	public User1(String name, String lastname, String city, String email, String password, String phone, String enabled,
+			Set<Theater> theaters) {
 		super();
 		this.name = name;
-		this.lastname = state;
+		this.lastname = lastname;
 		this.city = city;
-		this.email = mail;
+		this.email = email;
 		this.password = password;
 		this.phone = phone;
 		this.enabled = "false";
+		this.theaters = theaters;
 	}
-
-
 
 	public User1(String name, String lastname) {
 		super();
@@ -88,8 +98,6 @@ public class User1 implements Serializable {
 		return this.password;
 	}
 	
-	
-
 	public String getEnabled() {
 		return enabled;
 	}
@@ -104,6 +112,14 @@ public class User1 implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Set<Theater> getTheaters() {
+		return theaters;
+	}
+
+	public void setTheaters(Set<Theater> theaters) {
+		this.theaters = theaters;
 	}
 
 	@Override

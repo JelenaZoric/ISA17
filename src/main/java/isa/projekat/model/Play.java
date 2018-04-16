@@ -1,12 +1,17 @@
 package isa.projekat.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import isa.projekat.model.Theater;
@@ -20,6 +25,7 @@ public class Play implements Serializable {
 	private static final long serialVersionUID = -6464736608983409359L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "play_id")
 	private Long id;
 	
 	@Column(nullable = false)
@@ -54,10 +60,15 @@ public class Play implements Serializable {
 	@ManyToOne
 	private Theater theater;
 	
+	@ManyToMany
+	@JoinTable(name = "play_date", joinColumns = { @JoinColumn(name = "play_id") }, inverseJoinColumns = { @JoinColumn(name = "date_id") })
+	private Set<DateOfPlay> dates = new HashSet<DateOfPlay>();
+	
 	public Play() {}
 
-	public Play(String name, String genre, String director,
-			int duration, float avgScore, String description, int price) {
+	
+	
+	public Play(String name, String genre, String director, int duration, float avgScore, String description, int price, Set<DateOfPlay> dates) {
 		super();
 		this.name = name;
 		this.genre = genre;
@@ -66,8 +77,10 @@ public class Play implements Serializable {
 		this.avgScore = avgScore;
 		this.description = description;
 		this.price = price;
+		this.theater = theater;
+		this.dates = dates;
 	}
-	
+
 	public Play(String name, String genre, String director,
 			int duration, float avgScore, String description, int price, Theater theater) {
 		super();
@@ -144,4 +157,13 @@ public class Play implements Serializable {
 	public void setPrice(int price) {
 		this.price = price;
 	}
+
+	public Set<DateOfPlay> getDates() {
+		return dates;
+	}
+
+	public void setDates(Set<DateOfPlay> dates) {
+		this.dates = dates;
+	}
+	
 }
