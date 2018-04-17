@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 
 
@@ -50,13 +51,17 @@ public class User1 implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "user_theater", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "theater_id") })
 	private Set<Theater> theaters = new HashSet<Theater>();
+	
+	@OneToMany
+	@JoinTable(name = "user_seat", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "seat_id") })
+	private Set<Seat> seats = new HashSet<Seat>();
 
 	public User1() {
 		
 	}
 
 	public User1(String name, String lastname, String city, String email, String password, String phone, String enabled,
-			Set<Theater> theaters) {
+			Set<Theater> theaters, Set<Seat> seats) {
 		super();
 		this.name = name;
 		this.lastname = lastname;
@@ -66,6 +71,7 @@ public class User1 implements Serializable {
 		this.phone = phone;
 		this.enabled = "false";
 		this.theaters = theaters;
+		this.seats = seats;
 	}
 
 	public User1(String name, String lastname) {
@@ -126,4 +132,14 @@ public class User1 implements Serializable {
 	public String toString() {
 		return getName() + "," + getLastname();
 	}
+
+	public Set<Seat> getSeats() {
+		return seats;
+	}
+
+	public void setSeats(Set<Seat> seats) {
+		this.seats = seats;
+	}
+	
+	
 }

@@ -28,7 +28,7 @@ public class DateOfPlay {
 	private String date;
 	
 	//@OneToMany(fetch = FetchType.LAZY, mappedBy = "date")
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany
 	@JoinTable(name = "date_hall", joinColumns = { @JoinColumn(name = "date_id") }, inverseJoinColumns = { @JoinColumn(name = "hall_id") })
 	private Set<Hall> halls = new HashSet<Hall>();
 

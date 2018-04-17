@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -23,7 +24,7 @@ public class Hall {
 	private Long id;
 
 	//@OneToMany(fetch = FetchType.LAZY, mappedBy = "hall")
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany
 	@JoinTable(name = "hall_seat", joinColumns = { @JoinColumn(name = "hall_id") }, inverseJoinColumns = { @JoinColumn(name = "seat_id") })
 	private Set<Seat> seats = new HashSet<Seat>();
 	
@@ -32,6 +33,9 @@ public class Hall {
 	
 	@Column(nullable=false)
 	private int numberOfSeats;
+	
+	@ManyToOne
+	private DateOfPlay date;
 
 	public Hall() {
 		super();
@@ -75,6 +79,14 @@ public class Hall {
 
 	public void setNumberOfSeats(int numberOfSeats) {
 		this.numberOfSeats = numberOfSeats;
+	}
+
+	public DateOfPlay getDate() {
+		return date;
+	}
+
+	public void setDate(DateOfPlay date) {
+		this.date = date;
 	}
 	
 	

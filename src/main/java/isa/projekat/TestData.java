@@ -11,12 +11,15 @@ import isa.projekat.model.Ad;
 import isa.projekat.model.DateOfPlay;
 import isa.projekat.model.Hall;
 import isa.projekat.model.Play;
+import isa.projekat.model.Seat;
 import isa.projekat.model.Theater;
 import isa.projekat.repository.AdRepository;
 import isa.projekat.repository.DateRepository;
 import isa.projekat.service.AdService;
 import isa.projekat.service.DateService;
+import isa.projekat.service.HallService;
 import isa.projekat.service.PlayService;
+import isa.projekat.service.SeatService;
 import isa.projekat.service.TheaterService;
 import isa.projekat.service.UserService;
 
@@ -44,13 +47,77 @@ public class TestData {
 	@Autowired
 	private DateService dateService;
 	
+	@Autowired
+	private HallService hallService;
+	
+	@Autowired
+	private SeatService seatService;
+	
 	
 	@PostConstruct
 	private void init(){
+		
+		Set<Seat>seats1 = new HashSet<Seat>();
+		Set<Seat>seats2 = new HashSet<Seat>();
+		
+		Seat seat1 = new Seat(1, "slobodno");
+		Seat seat2 = new Seat(2, "slobodno");
+		Seat seat3 = new Seat(3, "slobodno");
+		Seat seat4 = new Seat(4, "slobodno");
+		Seat seat5 = new Seat(5, "slobodno");
+		
+		Seat seat6 = new Seat(1, "slobodno");
+		Seat seat7 = new Seat(2, "slobodno");
+		Seat seat8 = new Seat(3, "slobodno");
+		Seat seat9 = new Seat(4, "slobodno");
+		
+		seats1.add(seat1);
+		seats1.add(seat2);
+		seats1.add(seat3);
+		seats1.add(seat4);
+		seats1.add(seat5);
+		
+		seats2.add(seat6);
+		seats2.add(seat7);
+		seats2.add(seat8);
+		seats2.add(seat9);
+		
+		seatService.save(seat1);
+		seatService.save(seat2);
+		seatService.save(seat3);
+		seatService.save(seat4);
+		seatService.save(seat5);
+		seatService.save(seat6);
+		seatService.save(seat7);
+		seatService.save(seat8);
+		seatService.save(seat9);
+		
+		Set<Hall>halls1 = new HashSet<Hall>();
+		//Set<Hall>halls2 = new HashSet<Hall>();
+		//Set<Hall>halls3 = new HashSet<Hall>();
+		
+		Hall hall1 = new Hall(seats1, "sala A", 10);
+		Hall hall2 = new Hall(seats2, "sala B", 15);
+		//Hall hall3 = new Hall(new HashSet<Seat>(), "sala C", 12);
+		//Hall hall4 = new Hall(new HashSet<Seat>(), "sala D", 20);
+		//Hall hall5 = new Hall(new HashSet<Seat>(), "sala E", 8);
+		
+		halls1.add(hall1);
+		halls1.add(hall2);
+		//halls1.add(hall3);
+		//halls2.add(hall4);
+		//halls2.add(hall5);
+		hallService.save(hall1);
+		hallService.save(hall2);
+		//hallService.save(hall3);
+		//hallService.save(hall4);
+		//hallService.save(hall5);
+		
+		
 		Set<DateOfPlay> dates1 = new HashSet<DateOfPlay>();
 		Set<DateOfPlay> dates2 = new HashSet<DateOfPlay>();
 		//Set<Hall>halls = new HashSet<>();
-		DateOfPlay date1 = new DateOfPlay("1.1.2019. 20h", new HashSet<Hall>());
+		DateOfPlay date1 = new DateOfPlay("1.1.2019. 20h", halls1);
 		DateOfPlay date2 = new DateOfPlay("2.1.2019. 19h", new HashSet<Hall>());
 		DateOfPlay date3 = new DateOfPlay("3.1.2019. 21h", new HashSet<Hall>());
 		DateOfPlay date4 = new DateOfPlay("4.1.2019. 16h", new HashSet<Hall>());

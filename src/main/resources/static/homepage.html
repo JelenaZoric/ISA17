@@ -39,6 +39,7 @@
 			}).then(function(data) {
 				for(i=0; i<data.length; i++){
 					if(data[i].email==localStorage.getItem("email")){
+						localStorage.setItem("id", data[i].id); //nooooooooooooooovooooooooo
 						nastavak= "<a href=\"profile.html?id=" + data[i].id + "\">" + data[i].name + " " + data[i].lastname + "</a>"
 						$("p").append(nastavak);
 						//$("#history").append(data[i].theaters[0].name);
@@ -96,6 +97,30 @@
 			</tr>
 		</table>
 		
+		<h3 id="hall"></h3>
+		<table id="hallTable" class = "table" style="width: 1200px">
+			<tr class="header">
+				<th></th>
+				<th></th>
+			</tr>
+		</table>
+		
+		<h3 id="seat"></h3>
+		<table id="seatTable" class = "table" style="width: 1200px">
+			<tr class="header">
+				<th></th>
+				<th></th>
+			</tr>
+		</table>
+		
+		<h3 id="reserv"></h3>
+		<table id="reservations" class = "table" style="width: 1200px">
+			<tr class="header">
+				<th></th>
+				<th></th>
+			</tr>
+		</table>
+		
 		<script>
 		$(document).ready(function() {
 			$.ajax({
@@ -136,13 +161,13 @@
 					for(i=0; i<data.program.length; i++) {
 							newRow = "<tr>"
 								+ "<td class=\"name\">" + data.program[i].name + "</td>"
-								+ "<td><a onclick=\"myFunctionDate(" + data.program[i].id + ",'" + data.program[i].name +"')\" href=\"#" + data.program[i].id + "\">Izaberi ovu predstavu</a></td>"
+								+ "<td><a onclick=\"myFunctionDate(" + data.program[i].id + ",'" + data.program[i].name +"')\" href=\"#" + data.program[i].id + "\">Izaberi ovu predstavu i prikazi datume</a></td>"
 								+ "</tr>"
 							$("#play").append(newRow)
 					}
 				});
 		}
-		function myFunctionDate(id,name) {
+		function myFunctionDate(id,name) { //id i naziv predstave
 			$("#date").empty();
 			$("#date").append("Izaberite datum za predstavu " + name)
 			var url_string = window.location.href;
@@ -156,11 +181,95 @@
 					for(i=0; i<data.dates.length; i++) {
 							newRow = "<tr>"
 								+ "<td class=\"name\">" + data.dates[i].date + "</td>"
-								+ "<td><a onclick=\"myFunction()\" href=\"#\">Izaberi ovaj datum</a></td>"
+								+ "<td><a onclick=\"myFunctionHall(" + data.dates[i].id + ",'" + data.dates[i].date +"')\" href=\"#" + data.dates[i].id + "\">Izaberi ovaj datum i prikazi sale</a></td>"
 								+ "</tr>"
 							$("#dateTable").append(newRow)
 					}
 				});
+		}
+		
+		function myFunctionHall(id,date) {  //id datuma i datum
+			$("#hall").empty();
+			$("#hall").append("Izaberite salu za termin " + date)
+			var url_string = window.location.href;
+			console.log(url_string);
+			console.log(id)
+			 //document.getElementById("theatre").style.color = "red";
+			 $.ajax({
+					url: "http://localhost:8090/myapp/dates/getDate?id=" + id
+				}).then(function(data) {
+					$("#hallTable").empty();
+					for(i=0; i<data.halls.length; i++) {
+							newRow = "<tr>"
+								+ "<td class=\"name\">" + data.halls[i].name + "</td>"
+								+ "<td><a onclick=\"myFunctionSeat(" + data.halls[i].id + ",'" + data.halls[i].name +"')\" href=\"#" + data.halls[i].id + "\">Izaberi ovu salu i prikazi mesta</a></td>"
+								+ "</tr>"
+							$("#hallTable").append(newRow)
+					}
+				});
+		}
+		
+		function myFunctionSeat(id,name) {  //id sale i naziv sale
+			$("#seat").empty();
+			$("#seat").append("Izaberite mesto za rezervaciju u sali " + name)
+			var url_string = window.location.href;
+			console.log(url_string);
+			console.log(id)
+			 //document.getElementById("theatre").style.color = "red";
+			 $.ajax({
+					url: "http://localhost:8090/myapp/halls/getHall?id=" + id
+				}).then(function(data) {
+					$("#seatTable").empty();
+					for(i=0; i<data.seats.length; i++) {
+							newRow = "<tr>"
+								+ "<td class=\"name\">" + data.seats[i].number + "</td>"
+								+ "<td><a onclick=\"myFunctionReserve(" + data.seats[i].id + ",'" + data.seats[i].reserved +"'," + data.seats[i].number +")\" href=\"#" + data.seats[i].id + "\">Rezervisi mesto</a></td>"
+								+ "</tr>"
+							$("#seatTable").append(newRow)
+					}
+				});
+		}
+		
+		function myFunctionReserve(seat_id, seat_reserved, seat_num){
+			var id = localStorage.getItem("id");
+			console.log(id);
+			formData = JSON.stringify({
+				id:seat_id,
+				number:seat_num,
+				reserved:seat_reserved
+				//city:"ccc",
+				//description:"ddd"
+			});
+			 $.ajax({
+					url: "http://localhost:8090/myapp/users/reserve/" + id,
+					type: "PUT",
+					data: formData,
+					contentType: "application/json",
+					datatype: 'json',
+					success: function(data){
+						$("#reserv").empty();
+						$("#reserv").append("Rezervisana mesta");
+						$("#reservations").empty();
+						console.log("uspesno");
+						//$("#history").empty();
+						//$("#historyCinema").empty();
+						console.log(data.name)
+					/*	for(j=0; j<data.theaters.length; j++){
+							console.log(data.theaters[j].name);
+								newRow = "<tr>" + "<td class=\"code\">" + data.theaters[j].name + "</td>"
+										+ "<td>" + data.theaters[j].address + "</td></tr>"
+								$("#history").append(newRow)
+							
+						} */
+						for(j=0; j<data.seats.length; j++){
+							//console.log(data.seats[j].name);
+								newRow = "<tr>" + "<td class=\"code\">" + data.seats[j].number + "</td>"
+										+ "<td>" + data.seats[j].reserved + "</td></tr>"
+								$("#reservations").append(newRow)
+							
+						}
+					}
+			 });  
 		}
 		</script>
 		

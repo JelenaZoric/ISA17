@@ -6,9 +6,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import isa.projekat.model.Seat;
+import isa.projekat.model.Theater;
 import isa.projekat.model.User1;
 import isa.projekat.repository.UserRepository;
 import isa.projekat.service.EmailService;
+import isa.projekat.service.SeatService;
+import isa.projekat.service.TheaterService;
 import isa.projekat.service.UserService;
 
 import org.slf4j.Logger;
@@ -42,7 +46,11 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private TheaterService theaterService;
 	
+	@Autowired
+	private SeatService seatService;
 	
 //	@Autowired
 //	private UserRepository userRepository;
@@ -121,5 +129,17 @@ public class UserController {
 	public ResponseEntity<User1> getUser(@RequestParam("id") Long id){
 		User1 user = userService.findOne(id);
 		return new ResponseEntity<User1>(user, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/reserve/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+	public ResponseEntity<User1> reserve(@PathVariable("id") Long id, @RequestBody Seat seat){
+		User1 edited = userService.findOne(id);
+		//theaterService.save(theater);
+		System.out.println(seat.getId());
+		seat = seatService.findOne(seat.getId());
+		seat.setReserved("rezervisano");
+		edited.getSeats().add(seat);
+		userService.save(edited);
+		return new ResponseEntity<User1>(edited, HttpStatus.OK);
 	}
 }
