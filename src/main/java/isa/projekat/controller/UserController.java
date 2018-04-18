@@ -142,4 +142,17 @@ public class UserController {
 		userService.save(edited);
 		return new ResponseEntity<User1>(edited, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value="/reserveTheater/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+	public ResponseEntity<User1> reserveTheater(@PathVariable("id") Long id, @RequestBody Theater theater){
+		User1 edited = userService.findOne(id);
+		//theaterService.save(theater);  //neee
+		System.out.println("id izabranog pozorista je " + theater.getId());
+		Theater theater1 = theaterService.findOne(theater.getId());
+		//theater1.setName(theater.getName());
+		System.out.println("Izabrano pozoriste je " + theater1.getId());
+		edited.getTheaters().add(theater1);
+		userService.save(edited);
+		return new ResponseEntity<User1>(edited, HttpStatus.OK);
+	}
 }
