@@ -14,21 +14,104 @@
 		var id = url.searchParams.get("id");
 		$(document).ready(function() {
 			$.ajax({
-				
 				url:"http://localhost:8090/myapp/plays/getPlay?id=" + id
 			}).then(function(data) {
-				rows = "<tr><td class=\"name\">" + data.name + "</td></tr>"
-					+ "<tr><td class=\"address\">" + data.genre + "</td></tr>"
-					+ "<tr><td class=\"city\">" + data.director + "</td></tr>"
-					+ "<tr><td class=\"description\">Opis:" + data.description + "</td></tr>"
+				rows = "<tr><td class=\"name\">Naziv: " + data.name + "</td></tr>"
+					+ "<tr><td class=\"genre\">Žanr: " + data.genre + "</td></tr>"
+					+ "<tr><td class=\"director\">Reditelj: " + data.director + "</td></tr>"
+					+ "<tr><td class=\"duration\">Trajanje: " + data.duration + " min</td></tr>"
+					+ "<tr><td class=\"avgScore\">Prosečna ocena: " + data.avgScore + "</td></tr>"
+					+ "<tr><td class=\"description\">Opis: " + data.description + "</td></tr>"
+					+ "<tr><td class=\"price\">Cena karte: " + data.price + " din</td></tr>"
 				$("#dataTable").append(rows)
+				$("#editNaziv").val(data.name)
+				$("#editZanr").val(data.genre)
+				$("#editReditelj").val(data.director)
+				$("#editTrajanje").val(data.duration)
+				$("#editOcena").val(data.avgScore)
+				$("#editOpis").val(data.description)
+				$("#editCena").val(data.price)
+			});
+			
+			$("#edit").click(function(){
+				//pripremamo JSON koji cemo poslati
+				formData = JSON.stringify({
+	                name:$("#editForm [name='name']").val(),
+	                genre:$("#editForm [name='genre']").val(),
+	                director:$("#editForm [name='director']").val(),
+	                duration:$("#editForm [name='duration']").val(),
+	                avgScore:$("#editForm [name='avgScore']").val(),
+	                description:$("#editForm [name='description']").val(),
+	                price:$("#editForm [name='price']").val(),
+	            });
+				$.ajax({
+					url: "http://localhost:8090/myapp/plays/" + id,
+					type: "PUT",
+					data: formData,
+					//saljemo json i ocekujemo json nazad
+					contentType: "application/json",
+					datatype: 'json',
+					success: function(data) {
+						location.href=url
+			   	    }
+				});
 			});
 		});
 		</script>
 	</head>
 	<body>
 		<h2>Profil predstave</h2>
+		<a href="#editModal" data-toggle="modal" data-target="#editModal">Izmeni profil</a>
 		<table id="dataTable" class="table">
 		</table>
+		<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Izmena</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <form id="editForm">
+		      <div class="modal-body">
+					<input type="hidden" name="id" id="id" />
+				<p>
+					<label for="editNaziv">Naziv</label> <input type="text" name="name"
+						id="editNaziv" />
+				</p>	
+				<p>
+					<label for="editZanr">Zanr</label> <input type="text" name="genre"
+						id="editZanr" />
+				</p>	
+				<p>
+					<label for="editReditelj">Reditelj</label> <input type="text" name="director"
+						id="editReditelj" />
+				</p>
+				<p>
+					<label for="editTrajanje">Trajanje</label> <input type="text" name="duration"
+						id="editTrajanje" />
+				</p>
+				<p>
+					<label for="editOcena">Prosečna ocena</label> <input type="text" name="avgScore"
+						id="editOcena" />
+				</p>
+				<p>
+					<label for="editOpis">Opis</label> <input type="text" name="description"
+						id="editOpis" />
+				</p>
+				<p>
+					<label for="editCena">Cena</label> <input type="text" name="price"
+						id="editCena" />
+				</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+		        <button type="button" class="btn btn-primary" id="edit">Potvrda</button>
+		      </div>
+		      </form>
+		    </div>
+		</div>
+		</div>
 	</body>
 </html>

@@ -20,6 +20,9 @@ public class Seat {
 	@Column(nullable = false)
 	private String reserved;
 	
+	@Column(nullable=true)
+	private int discount;
+	
 	public Seat() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -29,6 +32,13 @@ public class Seat {
 		super();
 		this.number = number;
 		this.reserved = reserved;
+	}
+	
+	public Seat(int number, String reserved, int discount) {
+		super();
+		this.number = number;
+		this.reserved = reserved;
+		this.discount = discount;
 	}
 
 	public Long getId() {
@@ -55,5 +65,11 @@ public class Seat {
 		this.reserved = reserved;
 	}
 	
-	
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
 }

@@ -9,43 +9,245 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Profil</title>
 <script>
+var url_string = window.location.href;
+var url = new URL(url_string);
+var id = url.searchParams.get("id");
 function addProgram(value1, value2, set) {
 	newRow = "<tr><td><a href=\"playProfile.html?id=" + value1.id + "\">" + value1.name + "</td><td>"
 			+ value1.director + "</td><td>"
 			+ value1.avgScore + "</td>"
+			+ "<td><a class=\"remove\" href=\"plays/" + id + "/" + value1.id + "\">Ukloni</a></td>"
 			+ "</tr>"
 	$("#programTable").append(newRow)
 }
-	var url_string = window.location.href;
-	var url = new URL(url_string);
-	var id = url.searchParams.get("id");
-	//console.log(id);
+
 	$(document).ready(function() {
 		$.ajax({
-			
 			url:"http://localhost:8090/myapp/theaters/getTheater?id=" + id
 		}).then(function(data) {
 			rows = "<tr><td class=\"name\">" + data.name + "</td></tr>"
-				+ "<tr><td class=\"address\">" + data.address + "</td></tr>"
-				+ "<tr><td class=\"city\">" + data.city + "</td></tr>"
-				+ "<tr><td class=\"description\">Opis:" + data.description + "</td></tr>"
+			+ "<tr><td class=\"address\">" + data.address + "</td></tr>"
+			+ "<tr><td class=\"city\">" + data.city + "</td></tr>"
+			+ "<tr><td class=\"description\">Opis: " + data.description + "</td></tr>"
 			$("#dataTable").append(rows)
+			$("#editNaziv").val(data.name)
+			$("#editAdresa").val(data.address)
+			$("#editGrad").val(data.city)
+			$("#editOpis").val(data.description)
 			data.program.forEach(addProgram)
+		});
+		
+		$.ajax({
+			url:"http://localhost:8090/myapp/theaters/quickres/" + id
+		}).then(function(data) {
+			for(i = 0; i<data.length; i++) {
+				row = "<tr><td class=\"number\">" + data[i].number + "</td>"
+					+ "<td class=\"discount\">" + data[i].discount + "%</td><"
+					+ "<td><a class=\"reserve\" href=\"seats/reserve/" + data[i].id + "\">Rezerviši</a></td></tr>"
+				$("#resTable").append(row)
+			}
+		});
+		
+		$("#edit").click(function(){
+			//pripremamo JSON koji cemo poslati
+			formData = JSON.stringify({
+                name:$("#editForm [name='name']").val(),
+                address:$("#editForm [name='address']").val(),
+                city:$("#editForm [name='city']").val(),
+                description:$("#editForm [name='description']").val(),
+            });
+			$.ajax({
+				url: "http://localhost:8090/myapp/theaters/" + id,
+				type: "PUT",
+				data: formData,
+				//saljemo json i ocekujemo json nazad
+				contentType: "application/json",
+				datatype: 'json',
+				success: function(data) {
+					location.href=url
+		   	    }
+			});
+		});
+		
+		$("#add").click(function(){
+			//pripremamo JSON koji cemo poslati
+			formData = JSON.stringify({
+                name:$("#inputForm [name='name']").val(),
+                genre:$("#inputForm [name='genre']").val(),
+                director:$("#inputForm [name='director']").val(),
+                duration:$("#inputForm [name='duration']").val(),
+                avgScore:$("#inputForm [name='avgScore']").val(),
+                description:$("#inputForm [name='description']").val(),
+                price:$("#inputForm [name='price']").val(),
+            });
+			$.ajax({
+				//dodajemo id pozorista u putanju
+				url: "http://localhost:8090/myapp/plays/" + id,
+				type: "POST",
+				data: formData,
+				//saljemo json i ocekujemo json nazad
+				contentType: "application/json",
+				datatype: 'json',
+				success: function(data) {
+					newRow = 
+						"<tr><td><a href=\"playProfile.html?id=" + data.id + "\">" + data.name + "</td><td>"
+						+ data.director + "</td><td>"
+						+ data.avgScore + "</td>"
+						+ "<td><a class=\"remove\" href=\"plays/" + id + "/" + data.id + "\">Ukloni</a></td>"
+						+ "</tr>"
+					$("#programTable").append(newRow)
+				  }
+				});
+			$('#inputModal').modal('toggle');
 		});
 	});
 	
+	$(document).on("click", ".remove", function(event){
+		//ne salji get zahtev
+		event.preventDefault(); 
+		
+		var confirmed = confirm("Da li ste sigurni da želite da uklonite?");
+		if(confirmed){
+		
+			var url = $(this).attr("href")
+			//red koji se treba izbrisati ako je brisanje na serveru bilo uspesno
+			tr_parent = $(this).closest("tr")
+			$.ajax({
+	        	url: url,
+	        	type: "DELETE",
+	        	success: function(){
+	        		//ukloni i na strani 
+					tr_parent.remove()
+		        }
+			});
+		}
+	});
+	
+	$(document).on("click", ".reserve", function(event){
+		//ne salji get zahtev
+		event.preventDefault(); 
+		
+		var url = $(this).attr("href")
+		$.ajax({
+        	url: url,
+        	type: "PUT",
+			//saljemo json i ocekujemo json nazad
+			contentType: "application/json",
+			datatype: 'json',
+        	success: function(){
+				alert("Karta je uspešno rezervisana!");
+        		location.href="theaterProfile.html?id=" + id
+	        }
+		});
+	});
 </script>
 </head>
 <body>
 	<h2>Profil pozorišta</h2>
+	<a href="#editModal" data-toggle="modal" data-target="#editModal">Izmeni profil</a>
 	<table id="dataTable" class="table">
 	</table>
 	<h3>Program</h3>
+	<a href="#inputModal" data-toggle="modal" data-target="#inputModal">Dodaj</a>
 	<table id="programTable" class="table">
 		<tr><th>Naziv</th>
 			<th>Režija</th>
 			<th>Prosečna ocena</th>
+			<th></th>
 		</tr>
 	</table>
+	<h3>Karte na popustu</h3>
+	<table id="resTable" class="table">
+		<tr><th>Broj sedišta</th>
+			<th>Popust</th>
+			<th></th>
+		</tr>
+	</table>
+	<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Izmena</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <form id="editForm">
+		      <div class="modal-body">
+					<input type="hidden" name="id" id="id" />
+				<p>
+					<label for="editNaziv">Naziv</label> <input type="text" name="name"
+						id="editNaziv" />
+				</p>	
+				<p>
+					<label for="editAdresa">Adresa</label> <input type="text" name="address"
+						id="editAdresa" />
+				</p>	
+				<p>
+					<label for="editGrad">Grad</label> <input type="text" name="city"
+						id="editGrad" />
+				</p>
+				<p>
+					<label for="editOpis">Opis</label> <input type="text" name="description"
+						id="editOpis" />
+				</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+		        <button type="button" class="btn btn-primary" id="edit">Potvrda</button>
+		      </div>
+		      </form>
+		    </div>
+		</div>
+	</div>
+	<div class="modal fade" id="inputModal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Dodavanje programa</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <form id="inputForm">
+		      <div class="modal-body">
+					<input type="hidden" name="id" id="id" />
+				<p>
+					<label for="inputNaziv">Naziv</label> <input type="text" name="name"
+						id="inputNaziv" />
+				</p>	
+				<p>
+					<label for="inputZanr">Žanr</label> <input type="text" name="genre"
+						id="inputZanr" />
+				</p>	
+				<p>
+					<label for="inputRezija">Reditelj</label> <input type="text" name="director"
+						id="inputRezija" />
+				</p>
+				<p>
+					<label for="inputTrajanje">Trajanje</label> <input type="text" name="duration"
+						id="inputTrajanje" />
+				</p>
+				<p>
+					<label for="inputOcena">Prosečna ocena</label> <input type="text" name="avgScore"
+						id="inputOcena" />
+				</p>
+				<p>
+					<label for="inputOpis">Opis</label> <input type="text" name="description"
+						id="inputOpis" />
+				</p>
+				<p>
+					<label for="inputCena">Cena</label> <input type="text" name="price"
+						id="inputCena" />
+				</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+		        <button type="button" class="btn btn-primary" id="add">Potvrda</button>
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+	</div>
 </body>
 </html>

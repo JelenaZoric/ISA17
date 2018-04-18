@@ -60,8 +60,8 @@ public class TestData {
 		Set<Seat>seats1 = new HashSet<Seat>();
 		Set<Seat>seats2 = new HashSet<Seat>();
 		
-		Seat seat1 = new Seat(1, "slobodno");
-		Seat seat2 = new Seat(2, "slobodno");
+		Seat seat1 = new Seat(1, "slobodno", 30);
+		Seat seat2 = new Seat(2, "slobodno", 20);
 		Seat seat3 = new Seat(3, "slobodno");
 		Seat seat4 = new Seat(4, "slobodno");
 		Seat seat5 = new Seat(5, "slobodno");

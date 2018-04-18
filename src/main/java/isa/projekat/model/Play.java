@@ -57,8 +57,8 @@ public class Play implements Serializable {
 	@Column(nullable = false)
 	private int price;
 	
-	@ManyToOne
-	private Theater theater;
+	//@ManyToOne
+	//private Theater theater;
 	
 	@ManyToMany
 	@JoinTable(name = "play_date", joinColumns = { @JoinColumn(name = "play_id") }, inverseJoinColumns = { @JoinColumn(name = "date_id") })
@@ -77,7 +77,7 @@ public class Play implements Serializable {
 		this.avgScore = avgScore;
 		this.description = description;
 		this.price = price;
-		this.theater = theater;
+		//this.theater = theater;
 		this.dates = dates;
 	}
 
@@ -91,7 +91,7 @@ public class Play implements Serializable {
 		this.avgScore = avgScore;
 		this.description = description;
 		this.price = price;
-		this.theater = theater;
+		//this.theater = theater;
 	}
 
 	public Long getId() {

@@ -1,14 +1,21 @@
 package isa.projekat.controller;
 
-import java.util.List;
-
+import isa.projekat.model.DateOfPlay;
+import isa.projekat.model.Hall;
+import isa.projekat.model.Play;
+import isa.projekat.model.Seat;
 import isa.projekat.model.Theater;
 import isa.projekat.repository.TheaterRepository;
 import isa.projekat.service.TheaterService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,5 +43,38 @@ public class TheaterController {
 	public ResponseEntity<Theater> getTheater(@RequestParam("id") Long id) {
 		Theater theater = theaterService.findOne(id);
 		return new ResponseEntity<Theater>(theater, HttpStatus.OK);
+	}
+	
+	//izmena
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+	public ResponseEntity<Theater> edit(@PathVariable("id") Long id, @RequestBody Theater theater) {
+		Theater edited = theaterService.findOne(id);
+		edited.setName(theater.getName());
+		edited.setAddress(theater.getAddress());
+		edited.setCity(theater.getCity());
+		edited.setDescription(theater.getDescription());
+		theaterService.save(edited);
+		return new ResponseEntity<Theater>(edited, HttpStatus.OK);
+	}
+	
+	//ucitavanje karata na popustu
+	@RequestMapping(method=RequestMethod.GET, value="quickres/{id}")
+	public ResponseEntity<List<Seat>> getDiscountSeats(@PathVariable("id") Long id) {
+		Theater theater = theaterService.findOne(id);
+		List<Seat> seatsList = new ArrayList<Seat>();
+		for(Play play : theater.getProgram()) {
+			for(DateOfPlay date : play.getDates()) {
+				for(Hall hall : date.getHalls()) {
+					System.out.println("hala " + hall.getName());
+					for(Seat seat : hall.getSeats()) {
+						System.out.println("sediste " + seat.getNumber());
+						if(seat.getDiscount() > 0 && seat.getReserved().equals("slobodno")) {
+							seatsList.add(seat);
+						}
+					}
+				}
+			}
+		}
+		return new ResponseEntity<List<Seat>>(seatsList, HttpStatus.OK);
 	}
 }

@@ -30,4 +30,14 @@ public class PlayServiceImpl implements PlayService {
 	public Play save(Play play) {
 		return playRepository.save(play);
 	}
+	
+	@Override
+	public Play delete(Long id) {
+		Play play = playRepository.findOne(id);
+		if(play == null) {
+			throw new IllegalArgumentException("Predstava ne postoji!");
+		}
+		playRepository.delete(id);
+		return play;
+	}
 }

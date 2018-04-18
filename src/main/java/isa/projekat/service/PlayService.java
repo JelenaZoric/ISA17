@@ -11,4 +11,6 @@ public interface PlayService {
 	Play findOne(Long id);
 	
 	Play save(Play play);
+	
+	Play delete(Long id);
 }
