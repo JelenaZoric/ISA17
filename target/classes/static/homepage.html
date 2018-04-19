@@ -121,7 +121,7 @@
 				<th></th>
 			</tr>
 		</table>
-		
+		<p id="dismiss"></p>
 		<script>
 		$(document).ready(function() {
 			$.ajax({
@@ -206,16 +206,29 @@
 					for(i=0; i<data.halls.length; i++) {
 							newRow = "<tr>"
 								+ "<td class=\"name\">" + data.halls[i].name + "</td>"
-								+ "<td><a onclick=\"myFunctionSeat(" + data.halls[i].id + ",'" + data.halls[i].name +"')\" href=\"#" + data.halls[i].id + "\">Izaberi ovu salu i prikazi mesta</a></td>"
+								+ "<td><a onclick=\"myFunctionSeat('" + date +"'," + data.halls[i].id + ",'" + data.halls[i].name +"')\" href=\"#" + data.halls[i].id + "\">Izaberi ovu salu i prikazi mesta</a></td>"
 								+ "</tr>"
 							$("#hallTable").append(newRow)
 					}
 				});
 		}
 		
-		function myFunctionSeat(id,name) {  //id sale i naziv sale
+		function myFunctionSeat(date,id,name) {  //id sale i naziv sale
 			$("#seat").empty();
-			$("#seat").append("Izaberite mesto za rezervaciju u sali " + name)
+			$("#seat").append("Izaberite mesto za rezervaciju za datum " + date + " u sali " + name)
+			console.log(date);
+			var date1 = new Date(date);
+			console.log(date1);
+			var today = new Date();
+			console.log("heeej danas je " + today);
+			var dateDiff = date1 - today;
+			
+			if(dateDiff < 1800000){
+				console.log(dateDiff + " nema nazad :0")
+			}
+			if(today.getTime() >= date1.getTime()){
+				console.log("prosla je predstava");
+			}
 			var url_string = window.location.href;
 			console.log(url_string);
 			console.log(id)
@@ -227,14 +240,14 @@
 					for(i=0; i<data.seats.length; i++) {
 							newRow = "<tr>"
 								+ "<td class=\"name\">" + data.seats[i].number + "</td>"
-								+ "<td><a onclick=\"myFunctionReserve(" + data.seats[i].id + ",'" + data.seats[i].reserved +"'," + data.seats[i].number +")\" href=\"#" + data.seats[i].id + "\">Rezervisi mesto</a></td>"
+								+ "<td><a onclick=\"myFunctionReserve('" + date +"'," + data.seats[i].id + ",'" + data.seats[i].reserved +"'," + data.seats[i].number +")\" href=\"#" + data.seats[i].id + "\">Rezervisi mesto</a></td>"
 								+ "</tr>"
 							$("#seatTable").append(newRow)
 					}
 				});
 		}
 		
-		function myFunctionReserve(seat_id, seat_reserved, seat_num){
+		function myFunctionReserve(date, seat_id, seat_reserved, seat_num){
 			var id = localStorage.getItem("id");
 			console.log(id);
 			formData = JSON.stringify({
@@ -251,6 +264,14 @@
 					contentType: "application/json",
 					datatype: 'json',
 					success: function(data){
+						var date1 = new Date(date);
+						console.log(date1);
+						var today = new Date();
+						console.log("heeej danas je " + today);
+						var dateDiff = date1 - today;
+						
+						
+						
 						$("#reserv").empty();
 						$("#reserv").append("Rezervisana mesta");
 						$("#reservations").empty();
@@ -265,13 +286,20 @@
 								$("#history").append(newRow)
 							
 						} */
+						if(dateDiff > 1800000){
+							console.log(dateDiff + " nema nazad :0")
+							console.log(seat.num + "mestoooo")
+							button = "<button>Odustani od rezervacije mesta " + seat_num + "</button>"
+							$("#dismiss").append(button)
+						}
 						for(j=0; j<data.seats.length; j++){
 							//console.log(data.seats[j].name);
 								newRow = "<tr>" + "<td class=\"code\">" + data.seats[j].number + "</td>"
-										+ "<td>" + data.seats[j].reserved + "</td></tr>"
+										//+ "<td>" + data.seats[j].reserved + "</td><a onclick=\"myFunctionDismiss('" + date +"'," + data.seats[j].id + ",'" + data.seats[j].reserved +"'," + data.seats[j].number +")\" href=\"#" + data.seats[j].id + "\">Povuci rezervaciju</a>" + "<td>" + "</tr>"
 								$("#reservations").append(newRow)
 							
 						}
+						
 					}
 			 });  
 			 id_choosen_theater = localStorage.getItem("choosen_theater_id");

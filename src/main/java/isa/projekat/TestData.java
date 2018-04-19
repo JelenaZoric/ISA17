@@ -66,10 +66,10 @@ public class TestData {
 		Seat seat4 = new Seat(4, "slobodno");
 		Seat seat5 = new Seat(5, "slobodno");
 		
-		Seat seat6 = new Seat(1, "slobodno");
-		Seat seat7 = new Seat(2, "slobodno");
-		Seat seat8 = new Seat(3, "slobodno");
-		Seat seat9 = new Seat(4, "slobodno");
+		Seat seat6 = new Seat(6, "slobodno");
+		Seat seat7 = new Seat(7, "slobodno");
+		Seat seat8 = new Seat(8, "slobodno");
+		Seat seat9 = new Seat(9, "slobodno");
 		
 		seats1.add(seat1);
 		seats1.add(seat2);
@@ -93,34 +93,34 @@ public class TestData {
 		seatService.save(seat9);
 		
 		Set<Hall>halls1 = new HashSet<Hall>();
-		//Set<Hall>halls2 = new HashSet<Hall>();
+		Set<Hall>halls2 = new HashSet<Hall>();
 		//Set<Hall>halls3 = new HashSet<Hall>();
 		
 		Hall hall1 = new Hall(seats1, "sala A", 10);
 		Hall hall2 = new Hall(seats2, "sala B", 15);
-		//Hall hall3 = new Hall(new HashSet<Seat>(), "sala C", 12);
-		//Hall hall4 = new Hall(new HashSet<Seat>(), "sala D", 20);
+		Hall hall3 = new Hall(new HashSet<Seat>(), "sala C", 12);
+		Hall hall4 = new Hall(new HashSet<Seat>(), "sala D", 20);
 		//Hall hall5 = new Hall(new HashSet<Seat>(), "sala E", 8);
 		
 		halls1.add(hall1);
 		halls1.add(hall2);
-		//halls1.add(hall3);
-		//halls2.add(hall4);
+		halls2.add(hall3);
+		halls2.add(hall4);
 		//halls2.add(hall5);
 		hallService.save(hall1);
 		hallService.save(hall2);
-		//hallService.save(hall3);
-		//hallService.save(hall4);
+		hallService.save(hall3);
+		hallService.save(hall4);
 		//hallService.save(hall5);
 		
 		
 		Set<DateOfPlay> dates1 = new HashSet<DateOfPlay>();
 		Set<DateOfPlay> dates2 = new HashSet<DateOfPlay>();
 		//Set<Hall>halls = new HashSet<>();
-		DateOfPlay date1 = new DateOfPlay("1.1.2019. 20h", halls1);
-		DateOfPlay date2 = new DateOfPlay("2.1.2019. 19h", new HashSet<Hall>());
-		DateOfPlay date3 = new DateOfPlay("3.1.2019. 21h", new HashSet<Hall>());
-		DateOfPlay date4 = new DateOfPlay("4.1.2019. 16h", new HashSet<Hall>());
+		DateOfPlay date1 = new DateOfPlay("2018-04-20", halls1);
+		DateOfPlay date2 = new DateOfPlay("2018-04-21", new HashSet<Hall>());
+		DateOfPlay date3 = new DateOfPlay("2018-04-22", new HashSet<Hall>());
+		DateOfPlay date4 = new DateOfPlay("2018-04-23", new HashSet<Hall>());
 		dates1.add(date1);
 		dates1.add(date2);
 		dates2.add(date3);
