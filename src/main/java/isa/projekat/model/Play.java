@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import isa.projekat.model.Theater;
 
@@ -57,11 +62,12 @@ public class Play implements Serializable {
 	@Column(nullable = false)
 	private int price;
 	
-	//@ManyToOne
-	//private Theater theater;
+	@ManyToOne
+	private Theater theater;
 	
-	@ManyToMany
-	@JoinTable(name = "play_date", joinColumns = { @JoinColumn(name = "play_id") }, inverseJoinColumns = { @JoinColumn(name = "date_id") })
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL, mappedBy = "play")
+	@JsonIgnore
+//	@JoinTable(name = "play_date", joinColumns = { @JoinColumn(name = "play_id") }, inverseJoinColumns = { @JoinColumn(name = "date_id") })
 	private Set<DateOfPlay> dates = new HashSet<DateOfPlay>();
 	
 	public Play() {}
@@ -91,7 +97,7 @@ public class Play implements Serializable {
 		this.avgScore = avgScore;
 		this.description = description;
 		this.price = price;
-		//this.theater = theater;
+		this.theater = theater;
 	}
 
 	public Long getId() {
@@ -165,5 +171,19 @@ public class Play implements Serializable {
 	public void setDates(Set<DateOfPlay> dates) {
 		this.dates = dates;
 	}
+
+
+
+	public Theater getTheater() {
+		return theater;
+	}
+
+
+
+	public void setTheater(Theater theater) {
+		this.theater = theater;
+	}
+	
+	
 	
 }

@@ -14,6 +14,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import isa.projekat.model.Play;
 
 @Entity
@@ -46,8 +48,9 @@ public class Theater implements Serializable {
 	//spisak karata sa popustima za brzu rezervaciju
 	
 	//repertoar
-	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinTable(name="theater_play", joinColumns = { @JoinColumn(name = "theater_id") }, inverseJoinColumns = { @JoinColumn(name = "play_id")})
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL, mappedBy = "theater")
+	@JsonIgnore	
+//	@JoinTable(name="theater_play", joinColumns = { @JoinColumn(name = "theater_id") }, inverseJoinColumns = { @JoinColumn(name = "play_id")})
 	private Set<Play> program = new HashSet<Play>();
 	
 	//konfiguracija segmenata i mesta u salama

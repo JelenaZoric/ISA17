@@ -57,30 +57,50 @@ public class TestData {
 	@PostConstruct
 	private void init(){
 		
-		Set<Seat>seats1 = new HashSet<Seat>();
-		Set<Seat>seats2 = new HashSet<Seat>();
+		Theater t1 = new Theater("Atelje 212", "Svetogorska 21", "Beograd", "", 't');
+		Theater t2 = new Theater("Narodno pozorište Kikinda", "Trg srpskih dobrovoljaca 28", "Kikinda", "", 't');
 		
-		Seat seat1 = new Seat(1, "slobodno", 30);
-		Seat seat2 = new Seat(2, "slobodno", 20);
-		Seat seat3 = new Seat(3, "slobodno");
-		Seat seat4 = new Seat(4, "slobodno");
-		Seat seat5 = new Seat(5, "slobodno");
+		theaterService.save(t1);
+		theaterService.save(t2);
 		
-		Seat seat6 = new Seat(6, "slobodno");
-		Seat seat7 = new Seat(7, "slobodno");
-		Seat seat8 = new Seat(8, "slobodno");
-		Seat seat9 = new Seat(9, "slobodno");
+		Play p1 = new Play("Pomorandžina kora", "drama", "Goran Marković", 93, 3.4f, "", 400, t1);
+		Play p2 = new Play("Smrt čoveka na Balkanu", "komedija", "Miroslav Momčilović", 100, 3.9f, "", 100, t2);
+		Play p3 = new Play("Kauboji", "mjuzikl", "Kokan Mladenović", 90, 4.2f, "", 300, t2);
 		
-		seats1.add(seat1);
-		seats1.add(seat2);
-		seats1.add(seat3);
-		seats1.add(seat4);
-		seats1.add(seat5);
+		playService.save(p1);
+		playService.save(p2);
+		playService.save(p3);
 		
-		seats2.add(seat6);
-		seats2.add(seat7);
-		seats2.add(seat8);
-		seats2.add(seat9);
+		DateOfPlay date1 = new DateOfPlay("2018-04-20", p1);
+		DateOfPlay date2 = new DateOfPlay("2018-04-21", p1);
+		DateOfPlay date3 = new DateOfPlay("2018-04-22", p2);
+		DateOfPlay date4 = new DateOfPlay("2018-04-23", p3);
+		
+		dateService.save(date1);
+		dateService.save(date2);
+		dateService.save(date3);
+		dateService.save(date4);
+		
+		Hall hall1 = new Hall("sala A", 10, date1);
+		Hall hall2 = new Hall("sala B", 15, date1);
+		Hall hall3 = new Hall("sala C", 12, date2);
+		Hall hall4 = new Hall("sala D", 20, date3);
+		
+		hallService.save(hall1);
+		hallService.save(hall2);
+		hallService.save(hall3);
+		hallService.save(hall4);
+		
+		Seat seat1 = new Seat(1, "slobodno", 30, hall1);
+		Seat seat2 = new Seat(2, "slobodno", 20, hall1);
+		Seat seat3 = new Seat(3, "slobodno", hall1);
+		Seat seat4 = new Seat(4, "slobodno", hall1);
+		Seat seat5 = new Seat(5, "slobodno", hall1);
+		
+		Seat seat6 = new Seat(6, "slobodno", 40, hall4);
+		Seat seat7 = new Seat(7, "slobodno", hall4);
+		Seat seat8 = new Seat(8, "slobodno", 15, hall4);
+		Seat seat9 = new Seat(9, "slobodno", hall4);
 		
 		seatService.save(seat1);
 		seatService.save(seat2);
@@ -90,64 +110,7 @@ public class TestData {
 		seatService.save(seat6);
 		seatService.save(seat7);
 		seatService.save(seat8);
-		seatService.save(seat9);
-		
-		Set<Hall>halls1 = new HashSet<Hall>();
-		Set<Hall>halls2 = new HashSet<Hall>();
-		//Set<Hall>halls3 = new HashSet<Hall>();
-		
-		Hall hall1 = new Hall(seats1, "sala A", 10);
-		Hall hall2 = new Hall(seats2, "sala B", 15);
-		Hall hall3 = new Hall(new HashSet<Seat>(), "sala C", 12);
-		Hall hall4 = new Hall(new HashSet<Seat>(), "sala D", 20);
-		//Hall hall5 = new Hall(new HashSet<Seat>(), "sala E", 8);
-		
-		halls1.add(hall1);
-		halls1.add(hall2);
-		halls2.add(hall3);
-		halls2.add(hall4);
-		//halls2.add(hall5);
-		hallService.save(hall1);
-		hallService.save(hall2);
-		hallService.save(hall3);
-		hallService.save(hall4);
-		//hallService.save(hall5);
-		
-		
-		Set<DateOfPlay> dates1 = new HashSet<DateOfPlay>();
-		Set<DateOfPlay> dates2 = new HashSet<DateOfPlay>();
-		//Set<Hall>halls = new HashSet<>();
-		DateOfPlay date1 = new DateOfPlay("2018-04-20", halls1);
-		DateOfPlay date2 = new DateOfPlay("2018-04-21", new HashSet<Hall>());
-		DateOfPlay date3 = new DateOfPlay("2018-04-22", new HashSet<Hall>());
-		DateOfPlay date4 = new DateOfPlay("2018-04-23", new HashSet<Hall>());
-		dates1.add(date1);
-		dates1.add(date2);
-		dates2.add(date3);
-		dates2.add(date4);
-		dateService.save(date1);
-		dateService.save(date2);
-		dateService.save(date3);
-		dateService.save(date4);
-		Play p1 = new Play("Pomorandžina kora", "drama", "Goran Marković", 93, 3.4f, "", 400, dates1);
-		Play p2 = new Play("Smrt čoveka na Balkanu", "komedija", "Miroslav Momčilović", 100, 3.9f, "", 300, dates1);
-		Play p3 = new Play("Kauboji", "mjuzikl", "Kokan Mladenović", 90, 4.2f, "", 300, dates2);
-		//p1.setTheater(t1);
-		//t1.getProgram().add(p1);
-		//playService.save(p1);
-	//	playService.save(p2);
-	//	playService.save(p3);
-		Set<Play> plays = new HashSet<Play>();
-		plays.add(p1);
-		Set<Play> plays2 = new HashSet<Play>();
-		plays2.add(p2);
-		plays2.add(p3);
-		Theater t1 = new Theater("Atelje 212", "Svetogorska 21", "Beograd", "", 't', plays);
-		Theater t2 = new Theater("Narodno pozorište Kikinda", "Trg srpskih dobrovoljaca 28", "Kikinda", "", 't', plays2);
-		t1 = theaterService.save(t1);
-		theaterService.save(t2);
-		
-		
+		seatService.save(seat9);	
 	
 		@SuppressWarnings("deprecation")
 		Date date = new Date(1200, 12, 1);

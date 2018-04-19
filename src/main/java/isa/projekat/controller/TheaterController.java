@@ -1,13 +1,5 @@
 package isa.projekat.controller;
 
-import isa.projekat.model.DateOfPlay;
-import isa.projekat.model.Hall;
-import isa.projekat.model.Play;
-import isa.projekat.model.Seat;
-import isa.projekat.model.Theater;
-import isa.projekat.repository.TheaterRepository;
-import isa.projekat.service.TheaterService;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +14,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import isa.projekat.model.DateOfPlay;
+import isa.projekat.model.Hall;
+import isa.projekat.model.Play;
+import isa.projekat.model.Seat;
+import isa.projekat.model.Theater;
+import isa.projekat.model.dto.Converters;
+import isa.projekat.model.dto.TheaterDTO;
+import isa.projekat.repository.TheaterRepository;
+import isa.projekat.service.SeatService;
+import isa.projekat.service.TheaterService;
+
 @RestController
 @RequestMapping(value="theaters")
 public class TheaterController {
@@ -32,6 +35,9 @@ public class TheaterController {
 	@Autowired
 	private TheaterService theaterService;
 	
+	@Autowired
+	private SeatService seatService;
+	
 	@RequestMapping(value="getTheaters", method=RequestMethod.GET)
 	public ResponseEntity<List<Theater>> getTheaters() {
 		List<Theater> theaters = theaterRepository.findAll();
@@ -40,10 +46,19 @@ public class TheaterController {
 	
 	@RequestMapping(value="getTheater", method=RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Theater> getTheater(@RequestParam("id") Long id) {
+	public ResponseEntity<TheaterDTO> getTheater(@RequestParam("id") Long id) {
 		Theater theater = theaterService.findOne(id);
-		return new ResponseEntity<Theater>(theater, HttpStatus.OK);
+		TheaterDTO result = Converters.convertTheaterToTheaterDTO(theater);
+		return new ResponseEntity<TheaterDTO>(result, HttpStatus.OK);
 	}
+	
+	/*@RequestMapping(value="getTheater1", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Theater> getTheater1(@RequestParam("id") Long id) {
+		Theater theater = theaterService.findOne(id);
+		System.out.println(theater.getProgram());
+		return new ResponseEntity<Theater>(theater, HttpStatus.OK);
+	}*/
 	
 	//izmena
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
@@ -61,8 +76,15 @@ public class TheaterController {
 	@RequestMapping(method=RequestMethod.GET, value="quickres/{id}")
 	public ResponseEntity<List<Seat>> getDiscountSeats(@PathVariable("id") Long id) {
 		Theater theater = theaterService.findOne(id);
-		List<Seat> seatsList = new ArrayList<Seat>();
-		for(Play play : theater.getProgram()) {
+		List<Seat> seatsList = seatService.findAll();
+		List<Seat> seats = new ArrayList<Seat>();
+		for(int i = 0; i < seatsList.size(); i++){
+			if(seatsList.get(i).getHall().getDate().getPlay().getTheater().getId()==id){
+				if(seatsList.get(i).getDiscount() > 0 && seatsList.get(i).getReserved().equals("slobodno"))
+					seats.add(seatsList.get(i));
+			}
+		}
+		/*for(Play play : theater.getProgram()) {
 			for(DateOfPlay date : play.getDates()) {
 				for(Hall hall : date.getHalls()) {
 					System.out.println("hala " + hall.getName());
@@ -74,7 +96,8 @@ public class TheaterController {
 					}
 				}
 			}
-		}
-		return new ResponseEntity<List<Seat>>(seatsList, HttpStatus.OK);
+		} */
+		
+		return new ResponseEntity<List<Seat>>(seats, HttpStatus.OK);
 	}
 }

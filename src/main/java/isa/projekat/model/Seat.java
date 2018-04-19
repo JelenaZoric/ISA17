@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Seat {
@@ -22,6 +23,9 @@ public class Seat {
 	
 	@Column(nullable=true)
 	private int discount;
+	
+	@ManyToOne
+	private Hall hall;
 	
 	public Seat() {
 		super();
@@ -41,6 +45,21 @@ public class Seat {
 		this.discount = discount;
 	}
 
+	public Seat(int number, String reserved, int discount, Hall hall) {
+		super();
+		this.number = number;
+		this.reserved = reserved;
+		this.discount = discount;
+		this.hall = hall;
+	}
+
+	public Seat(int number, String reserved, Hall hall) {
+		super();
+		this.number = number;
+		this.reserved = reserved;
+		this.hall = hall;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -72,4 +91,13 @@ public class Seat {
 	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
+
+	public Hall getHall() {
+		return hall;
+	}
+
+	public void setHall(Hall hall) {
+		this.hall = hall;
+	}
+	
 }

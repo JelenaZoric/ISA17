@@ -20,24 +20,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdController {
 
 	@Autowired
-	private AdService newAdService;
+	private AdService adService;
 	@Autowired 
-	private AdRepository newAdRepository;
+	private AdRepository adRepository;
 	
 	@RequestMapping(value="getAds", method = RequestMethod.GET)
 	public ResponseEntity<List<Ad>> getNewAds() {
 
-		List<Ad> ads = newAdService.findAll();
+		List<Ad> ads = adService.findAll();
 
 		return new ResponseEntity<List<Ad>>(ads, HttpStatus.OK);
 	}
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Ad> changeReservationStatus(@PathVariable Long id) {
 		
-		Ad ad = newAdService.findOne(id);
+		Ad ad = adService.findOne(id);
 		System.out.println("KONTROLER " + ad.getName());
 		ad.setReservationStatus(true);
-        newAdService.save(ad);
+        adService.save(ad);
 		return new ResponseEntity<Ad>(ad, HttpStatus.OK);
 	}
 
@@ -47,7 +47,7 @@ public class AdController {
 		System.out.println("NAME " + ad.getName());
 		Ad ad1 = new Ad(ad.getName(),ad.getDescription(), ad.getDate(), ad.getImage(), true);
 		//System.out.println("IDDDDDD"  + newAdService.findOne(ad.getId()));
-	Ad newAd = newAdService.save(ad1);
+	Ad newAd = adService.save(ad1);
 	//System.out.println(newAdService.findOne(ad.getId()).toString() + "PRONADJENO");
 	System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA VISEEEEEEEEEEEEEEEEEE");
 	//HttpHeaders headers = new HttpHeaders();

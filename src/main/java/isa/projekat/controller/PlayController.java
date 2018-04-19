@@ -2,6 +2,8 @@ package isa.projekat.controller;
 
 import isa.projekat.model.Play;
 import isa.projekat.model.Theater;
+import isa.projekat.model.dto.Converters;
+import isa.projekat.model.dto.PlayDTO;
 import isa.projekat.repository.PlayRepository;
 import isa.projekat.repository.TheaterRepository;
 import isa.projekat.service.PlayService;
@@ -36,20 +38,23 @@ public class PlayController {
 	
 	@RequestMapping(value="getPlay", method=RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Play> getPlay(@RequestParam("id") Long id) {
+	public ResponseEntity<PlayDTO> getPlay(@RequestParam("id") Long id) {
 		Play play = playService.findOne(id);
-		return new ResponseEntity<Play>(play, HttpStatus.OK);
+		PlayDTO result = Converters.convertPlayToPlayDTO(play);
+		return new ResponseEntity<PlayDTO>(result, HttpStatus.OK);
 	}
 	
 	//dodavanje predstave
 	@RequestMapping(value="/{theater_id}",method=RequestMethod.POST, consumes="application/json")
 	public ResponseEntity<Play> add(@RequestBody Play play, @PathVariable("theater_id") Long theater_id) {
-		Play newPlay = playService.save(play);
+		
 		Theater theater = theaterService.findOne(theater_id);
-		theater.getProgram().add(play);
-		System.out.println("program " + theater.getProgram());
-		theaterService.save(theater);
-		System.out.println("id poz " + theater.getId());
+		play.setTheater(theater);
+		Play newPlay = playService.save(play);
+//		theater.getProgram().add(play);
+//		System.out.println("program " + theater.getProgram());
+//		theaterService.save(theater);
+//		System.out.println("id poz " + theater.getId());
 		return new ResponseEntity<Play>(newPlay, HttpStatus.CREATED);
 	}
 	

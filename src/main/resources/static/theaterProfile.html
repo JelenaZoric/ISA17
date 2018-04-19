@@ -25,6 +25,9 @@ function addProgram(value1, value2, set) {
 		$.ajax({
 			url:"http://localhost:8090/myapp/theaters/getTheater?id=" + id
 		}).then(function(data) {
+			for(i=0; i<data.program.length; i++){
+				console.log(data.program[i]);
+			}
 			rows = "<tr><td class=\"name\">" + data.name + "</td></tr>"
 			+ "<tr><td class=\"address\">" + data.address + "</td></tr>"
 			+ "<tr><td class=\"city\">" + data.city + "</td></tr>"

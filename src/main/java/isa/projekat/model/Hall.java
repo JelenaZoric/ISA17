@@ -15,6 +15,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Hall {
 	
@@ -24,8 +26,9 @@ public class Hall {
 	private Long id;
 
 	//@OneToMany(fetch = FetchType.LAZY, mappedBy = "hall")
-	@OneToMany
-	@JoinTable(name = "hall_seat", joinColumns = { @JoinColumn(name = "hall_id") }, inverseJoinColumns = { @JoinColumn(name = "seat_id") })
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL, mappedBy = "hall")
+	@JsonIgnore
+//	@JoinTable(name = "hall_seat", joinColumns = { @JoinColumn(name = "hall_id") }, inverseJoinColumns = { @JoinColumn(name = "seat_id") })
 	private Set<Seat> seats = new HashSet<Seat>();
 	
 	@Column(nullable=false)
@@ -40,6 +43,13 @@ public class Hall {
 	public Hall() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Hall(String name, int numberOfSeats, DateOfPlay date) {
+		super();
+		this.name = name;
+		this.numberOfSeats = numberOfSeats;
+		this.date = date;
 	}
 
 	public Hall(Set<Seat> seats, String name, int numberOfSeats) {
@@ -88,6 +98,5 @@ public class Hall {
 	public void setDate(DateOfPlay date) {
 		this.date = date;
 	}
-	
 	
 }

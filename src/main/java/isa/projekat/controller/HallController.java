@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import isa.projekat.model.Hall;
+import isa.projekat.model.dto.Converters;
+import isa.projekat.model.dto.HallDTO;
 import isa.projekat.repository.HallRepository;
 import isa.projekat.service.HallService;
 
@@ -25,8 +27,9 @@ public class HallController {
 	
 	@RequestMapping(value="getHall", method=RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Hall> getHall(@RequestParam("id") Long id) {
+	public ResponseEntity<HallDTO> getHall(@RequestParam("id") Long id) {
 		Hall hall = hallService.findOne(id);
-		return new ResponseEntity<Hall>(hall, HttpStatus.OK);
+		HallDTO result = Converters.convertHallToHallDTO(hall);
+		return new ResponseEntity<HallDTO>(result, HttpStatus.OK);
 	}
 }
