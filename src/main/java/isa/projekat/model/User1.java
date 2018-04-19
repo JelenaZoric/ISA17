@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,6 +50,9 @@ public class User1 implements Serializable {
 	@Column(nullable = false)
 	private String enabled;
 	
+	@Column(nullable = true)
+	private String role;
+	
 	@ManyToMany
 	@JoinTable(name = "user_theater", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "theater_id") })
 	private Set<Theater> theaters = new HashSet<Theater>();
@@ -56,6 +61,10 @@ public class User1 implements Serializable {
 	@JoinTable(name = "user_seat", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "seat_id") })
 	private Set<Seat> seats = new HashSet<Seat>();
 
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="user_ad", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "ad_id")})
+	private Set<Ad> ad = new HashSet<Ad>();
+	
 	public User1() {
 		
 	}
@@ -73,11 +82,46 @@ public class User1 implements Serializable {
 		this.theaters = theaters;
 		this.seats = seats;
 	}
-
+	public User1(String name, String lastname, String city, String email, String password, String phone, String enabled,String uloga) {
+		super();
+		this.name = name;
+		this.lastname = lastname;
+		this.city = city;
+		this.email = email;
+		this.password = password;
+		this.phone = phone;
+		this.enabled = "false";
+		this.theaters = theaters;
+		this.seats = seats;
+		this.role = uloga;
+	}
+	public User1(String name, String lastname, String city, String email, String password, String phone, String enabled,String uloga, Set<Ad> ad) {
+		super();
+		this.name = name;
+		this.lastname = lastname;
+		this.city = city;
+		this.email = email;
+		this.password = password;
+		this.phone = phone;
+		this.enabled = "false";
+		this.theaters = theaters;
+		this.seats = seats;
+		this.role = uloga;
+		this.ad = ad;
+	}
 	public User1(String name, String lastname) {
 		super();
 		this.name = name;
 		this.lastname = lastname;
+	}
+
+	
+	public Set<Ad> getAd() {
+		return ad;
+	}
+
+	public void setAd(Set<Ad> ad) {
+		this.ad = ad;
 	}
 
 	public String getName() {
@@ -100,6 +144,14 @@ public class User1 implements Serializable {
 		return this.phone;
 	}
 	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	public String getPassword() {
 		return this.password;
 	}

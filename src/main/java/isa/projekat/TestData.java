@@ -13,6 +13,7 @@ import isa.projekat.model.Hall;
 import isa.projekat.model.Play;
 import isa.projekat.model.Seat;
 import isa.projekat.model.Theater;
+import isa.projekat.model.User1;
 import isa.projekat.repository.AdRepository;
 import isa.projekat.repository.DateRepository;
 import isa.projekat.service.AdService;
@@ -30,10 +31,10 @@ import org.springframework.stereotype.Component;
 public class TestData {
 
 	@Autowired
-	private AdRepository newAdRepository;
+	private AdRepository dRepository;
 	
 	@Autowired
-	private AdService newAdService;
+	private AdService adService;
 	
 	@Autowired
 	private TheaterService theaterService;
@@ -116,10 +117,12 @@ public class TestData {
 		Date date = new Date(1200, 12, 1);
 		File file = new File("C:\\Users\\Violeta\\Desktop\\primer.jpg");
 		Ad ad = new Ad("oglasss", "opis", date, file, true);
-		newAdService.save(ad);
+		adService.save(ad);
 		
-	    System.out.println(newAdService.findAll()+ "ISPISI SACUVANE" );
 	    Ad ad1 = new Ad("oglasss", "opis");
-		newAdService.save(ad1);
+		adService.save(ad1);
+		
+		User1 user = new User1("Bojan", "Bojanic", "Vranje", "boki@gmail.com", "222", "555-111", "true", "adminSistem");
+	    userService.save(user);
 	}
 }

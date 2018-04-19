@@ -56,7 +56,11 @@
 					} else {
 						console.log("neeee moze storage");
 					}
-					window.location.href = "http://localhost:8090/myapp/homepage.html";
+					if(result.role=='adminSistem'){
+						window.location.href = "http://localhost:8090/myapp/adminSystem.html";
+					}else{
+					    window.location.href = "http://localhost:8090/myapp/homepage.html";
+					}
 				}
 			});
 	  	});

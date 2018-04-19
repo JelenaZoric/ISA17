@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Ad implements Serializable{
@@ -38,6 +39,9 @@ public class Ad implements Serializable{
 	@Column(nullable = true)
 	private boolean reservationStatus;
 	
+	@ManyToOne
+	private User1 user;
+	
 	public Ad(){
 		
 	}
@@ -51,7 +55,15 @@ public class Ad implements Serializable{
 		this.image = image;
 		this.reservationStatus = reservationStatus;
 	}
-
+	public Ad(String name, String description, Date date, File image, boolean reservationStatus, User1 user) {
+	    super();
+		this.name = name;
+		this.description = description;
+		this.date = date;
+		this.image = image;
+		this.reservationStatus = reservationStatus;
+		this.user = user;
+	}
 	public Ad(String name, String description) {
 		super();
 		this.name = name;

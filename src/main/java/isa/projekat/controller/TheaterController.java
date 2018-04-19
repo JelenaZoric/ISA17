@@ -100,4 +100,12 @@ public class TheaterController {
 		
 		return new ResponseEntity<List<Seat>>(seats, HttpStatus.OK);
 	}
+	
+	/*
+	@RequestMapping(method=RequestMethod.POST, consumes="application/json")
+	public ResponseEntity<Theater> addTheater(@RequestBody Theater theater){
+	Theater theater1 = theaterService.save(theater);
+	return new ResponseEntity<>(theater1, HttpStatus.OK);
+	}*/
+	
 }

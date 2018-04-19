@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>Registracija pozorista i bioskopa</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="scripts/jquery-3.2.1.min.js" type="text/javascript"></script>
+
+</head>
+<body>
+  
+   <script type="text/javascript">
+$(document).ready(
+		function() {
+		
+		    
+	        $("#add").click(function(){
+//pripremamo JSON koji cemo poslati
+            formData=JSON.stringify({
+            	 name:$("#inputForm [name='name']").val(),
+            	 address:$("#inputForm [name='address']").val(),
+            	 city:$("#inputForm [name='city']").val(),
+                 description:$("#inputForm [name='description']").val(),
+                 ttype:$("#inputForm [name='type']").val()
+            });
+	       $.ajax({
+	        url: "http://localhost:8090/myapp/theaters",
+	   		type: "POST",
+	   		data: formData,
+	   		//saljemo json i ocekujemo json nazad
+	   		contentType: "application/json",
+	   		datatype: 'json',
+	    	   success: function(data){
+	    		   
+	    		  
+	    	alert("USPESNO")
+	    	   }
+	      
+	       });
+	      
+	       $('#inputModal').modal('toggle');
+	        
+	        });
+			
+			
+			
+		});
+		</script>
+<div class="modal fade" id="inputModal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Novo pozoriste/bioskop</h5>
+		          <span aria-hidden="true">&times;</span>
+		      </div>
+		      <form id="inputForm">
+		      <div class="modal-body">
+							
+				<p>
+					<label for="name">Naziv</label> <input type="text" name="name"
+						id="name" />
+				</p>
+				<p>
+					<label for="address">Adresa</label> <input type="text" name="address"
+						id="address" />
+				</p>
+				<p>
+					<label for="city">Grad</label> <input type="text" name="city"
+						id="city" />
+				</p>
+				<p>
+					<label for="description">Opis</label> <input type="text" name="description"
+						id="description" />
+				</p>
+				<p>
+					<label for="type">Tip (c-cinema, t-theater): </label> <input type="text" name="type"
+						id="type" />
+				</p>
+					
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+		        <button type="button" class="btn btn-primary" id="add">Potvrda</button>
+		        
+		    
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+
+
+</body>
+</html>
