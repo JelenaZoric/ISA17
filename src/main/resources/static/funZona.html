@@ -25,16 +25,14 @@
 		</button>
 		<br/>
 <div class="tab" style=" position:absolute; left:500px; top:10px">
-  <button class="tablinks" onclick="openAD(event, 'Prodavnica')" id="defaultOpen">Prodavnica</button>
-  <button class="tablinks" onclick="openAD(event, 'Oglasi')">Oglasi</button>
+  <button class="tablinks" onclick="openAD(event, 'Prodavnica')" id="defaultOpen">Zvanicna prodavnica</button>
+  <button class="tablinks" onclick="openAD(event, 'Oglasi')">Odobreni oglasi</button>
 
 </div>
 
 <div id="Prodavnica" class="tabcontent" style=" float: right; position:absolute; left:500px; top:30px">
   <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
-  <h3>Prodavnica</h3>
-  <!--<img src="images/primer.jpg">-->
-  
+
   <table id="dataTable" class="table">
   <tr class="header">
 				<th>Naziv oglasa: </th>
@@ -59,11 +57,47 @@ $(document).ready(
 				
 			});  	
 		
+			
 			$.ajax({
 				url : "http://localhost:8090/myapp/ads/getAds"
 			}).then(
 					function(data) {
 						for (i = 0; i < data.length; i++) {
+							if(data[i].approvedStatus==true){
+							if(data[i].reservationStatus==true){
+							newRow = 
+								"<tr>"
+									+ "<td class=\"name\">" + data[i].name + "</td>"
+									+ "<td class=\"description\">" + data[i].description + "</td>"
+									+ "<td class=\"date\">" + data[i].date + "</td>"
+									+ "<td class=\"image\">" + data[i].image + "</td>"
+								
+										+ "<td class=\"reservation\" id=\"" +data[i].id+ "\"> <button name=\"reservation\"  id=\"reservation\" disabled> rezervisano </button> </td>"	
+										+ "</tr>"
+										$("#dataTable1").append(newRow)		
+							}else{
+								newRow = 
+									"<tr>"
+										+ "<td class=\"name\">" + data[i].name + "</td>"
+										+ "<td class=\"description\">" + data[i].description + "</td>"
+										+ "<td class=\"date\">" + data[i].date + "</td>"
+										+ "<td class=\"image\">" + data[i].image + "</td>"
+										+ "<td class=\"reservation\" id=\"" +data[i].id+ "\"> <button name=\"reservation\"  id=\"reservation\"> rezerviši </button> </td>"
+										+ "</tr>"
+											$("#dataTable1").append(newRow)	
+									
+									}
+							}
+									
+						}  
+					});
+			
+			$.ajax({
+				url : "http://localhost:8090/myapp/ads/getAdss"
+			}).then(
+					function(data) {
+						for (i = 0; i < data.length; i++) {
+						
 							if(data[i].reservationStatus==true){
 							newRow = 
 								"<tr>"
@@ -87,21 +121,24 @@ $(document).ready(
 											$("#dataTable").append(newRow)	
 									
 									}
+							}
 									
-						}  
+						
 					});
 			$(document).on("click", ".reservation", function(event) {
-				
+				var url_string = window.location.href;
+				var url = new URL(url_string);
+				var id = url.searchParams.get("id");
 				alert($(this).attr('id'))
-				var id = $(this).attr('id')
+				var idOglas = $(this).attr('id')
 		
-		       var url  =  "http://localhost:8090/myapp/ads/" + id
+		       var url  =  "http://localhost:8090/myapp/ads/reservation/" + idOglas
 				$.ajax({
 					url: url,
-		        	type: "GET",
+		        	type: "PUT",
 		        	success: function(){
 		        		//ukloni i na strani 
-						alert("Uspesno rezervirano")
+		        		location.href="http://localhost:8090/myapp/funZona.html?id=" + id
 			        }
 					
 					
@@ -131,7 +168,7 @@ $(document).ready(
 	   		datatype: 'json',
 	    	   success: function(data){
 	    		   
-	    		  
+	    		  /*
 	    		   newRow = 
 							"<tr>"
 								+ "<td class=\"name\">" + data.name + "</td>"
@@ -142,7 +179,8 @@ $(document).ready(
 							+ "</tr>"
 							
 						$("#dataTable").append(newRow)
-						$("#dataTable1").append(newRow)
+						$("#dataTable1").append(newRow)*/
+						alert("Oglas se salje administratorima fan zone na odobravanje.")
 	    	   }
 	      
 	       });
@@ -159,8 +197,7 @@ $(document).ready(
 
 <div id="Oglasi" class="tabcontent" style=" float: right; position:absolute; left:500px; top:30px">
   <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
-  <h3>Oglasi</h3>
-  <p>Odobreni i neodobreni oglasi</p> 
+  <p>Odobreni oglasi korisnika</p> 
   
   
   <table id="dataTable1" class="table">
@@ -241,6 +278,8 @@ function extractFilename(path) {
 	}
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
+
+
 
 </script>
    

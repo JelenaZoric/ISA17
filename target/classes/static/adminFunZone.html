@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>ADMIN FAN ZONE</title>
+<script src="scripts/jquery-3.2.1.min.js"></script>
+		<script src="scripts/tether.min.js"></script>
+		<script src="scripts/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="stylesheets/design.css">
+		<link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<p id="changePassword">Promena sifre: </p>
+<p id="funZone"></p>
+<div>
+
+ <table id="dataTable" class="table">
+  <tr class="header">
+				<th>Naziv oglasa: </th>
+				<th>Opis: </th>
+				<th>Datum isteka oglasa: </th>
+				<th>Slika: </th>
+				<th>Postavio: </th>
+				<th>Odobriti: </th>
+			</tr>		
+			<script>
+			  var url_string = window.location.href;
+				var url = new URL(url_string);
+				var id = url.searchParams.get("id");
+				console.log(id);
+			$(document).ready(
+					function(){
+						$.ajax({
+							url: "http://localhost:8090/myapp/users/getUsers"
+						}).then(function(data) {
+							for(i=0; i<data.length; i++){
+								if(data[i].email==localStorage.getItem("email")){
+									localStorage.setItem("id", data[i].id); //nooooooooooooooovooooooooo
+							
+								console.log(data[i].id)
+									var id = data[i].id
+									nastavak= "<a href=\"changePassword.html?id=" + data[i].id + "\">" + data[i].name + " " + data[i].lastname + "</a>"
+									$("#changePassword").append(nastavak);
+									funZone =  "<a href=\"funZona.html?id=" + data[i].id + "\">Fan zona</a>"
+									$("#funZone").append(funZone);		
+								}
+							}
+						})
+						$.ajax({
+							url : "http://localhost:8090/myapp/ads/getAds"
+						}).then(
+								function(data) {
+									for (i = 0; i < data.length; i++) {
+										if(data[i].approvedStatus==true){
+										newRow = 
+											"<tr>"
+												+ "<td class=\"name\">" + data[i].name + "</td>"
+												+ "<td class=\"description\">" + data[i].description + "</td>"
+												+ "<td class=\"date\">" + data[i].date + "</td>"
+												+ "<td class=\"image\">" + data[i].image + "</td>"
+												+ "<td></td>"
+													+ "<td class=\"approve\" id=\"" +data[i].id+ "\"> <button name=\"approve\"  id=\"approve\" disabled> odobreno </button> </td>"	
+													+ "</tr>"
+													$("#dataTable").append(newRow)		
+										}else{
+											newRow = 
+												"<tr>"
+													+ "<td class=\"name\">" + data[i].name + "</td>"
+													+ "<td class=\"description\">" + data[i].description + "</td>"
+													+ "<td class=\"date\">" + data[i].date + "</td>"
+													+ "<td class=\"image\">" + data[i].image + "</td>"
+													+ "<td id=\"user\"></td>"
+													+ "<td class=\"approve\" id=\"" +data[i].id+ "\"> <button name=\"approve\"  id=\"reservation\"> odobri </button> </td>"
+													+ "</tr>"
+														$("#dataTable").append(newRow)	
+												
+												}
+												
+									}  
+								});
+						
+						$(document).on("click", ".approve", function(event) {
+							
+							alert($(this).attr('id'))
+							var id = $(this).attr('id')
+							 var url  =  "http://localhost:8090/myapp/ads/change/" + id
+							
+							 $.ajax({
+									url: url,
+						        	type: "GET",
+						        	success: function(){
+						        		//ukloni i na strani 
+						        		location.href="http://localhost:8090/myapp/adminFunZone.html?id=" + id
+							        }
+							
+							
+						});
+					});
+						
+						
+					});
+			</script>
+  </table>
+</div>
+<button id="noviRekvizit" href="#inputModal" data-toggle="modal" data-target="#inputModal">Dodaj rekvizit</button>
+<div class="modal fade" id="inputModal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Dodaj rekvizit</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <form id="inputForm">
+		      <div class="modal-body">
+					<input type="hidden" name="id" id="id" />			
+				<p>
+					<label for="name">Naziv</label> <input type="text" name="name"
+						id="name" />
+				</p>
+				<p>
+					<label for="description">Opis</label> <input type="text" name="description"
+						id="description" />
+				</p>
+				<p>
+					<label for="price">Cena: </label> <input type="text" name="price"
+						id="price" />
+				</p>
+				<p>
+					<label for="image">slika(opciono):  </label> <input type="file" name="image"
+						id="image" />
+				</p>		
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+		        <button type="button" class="btn btn-primary" id="add">Potvrda</button>
+		        
+		    
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+		<script> 
+		$(document).ready(
+				function(){
+		$("#add").click(function(){
+			var url_string = window.location.href;
+			var url = new URL(url_string);
+			var id = url.searchParams.get("id");
+			            formData=JSON.stringify({
+			            	 name:$("#inputForm [name='name']").val(),
+			                 description:$("#inputForm [name='description']").val(),
+			               //  price:$("#inputForm [name='date']").val(),
+			                 image:$("#inputForm [name='image']").val()
+			            });
+				       $.ajax({
+				        url: "http://localhost:8090/myapp/ads/admin/" + id, 
+				   		type: "POST",
+				   		data: formData,
+				   		//saljemo json i ocekujemo json nazad
+				   		contentType: "application/json",
+				   		datatype: 'json',
+				    	   success: function(data){
+				    		   
+				    		  /*
+				    		   newRow = 
+										"<tr>"
+											+ "<td class=\"name\">" + data.name + "</td>"
+											+ "<td class=\"description\">" + data.description + "</td>"
+											+ "<td class=\"date\">" + data.date + "</td>"
+											+ "<td class=\"image\">" + data.image + "</td>"
+											+ "<td class=\"reservation\" id=\"" +data.id+ "\"> <button name=\"reservation\"  id=\"reservation\"> rezerviši </button> </td>"
+										+ "</tr>"
+										
+									$("#dataTable").append(newRow)
+									$("#dataTable1").append(newRow)*/
+									alert("uspesno")
+				    	   }
+				      
+				       });
+				      
+				       $('#inputModal').modal('toggle');
+				        
+				        });
+				 });
+		</script>
+</body>
+</html>

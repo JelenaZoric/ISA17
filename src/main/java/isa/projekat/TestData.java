@@ -130,10 +130,18 @@ public class TestData {
 		Date date = new Date(1200, 12, 1);
 		File file = new File("C:\\Users\\Violeta\\Desktop\\primer.jpg");
 		Ad ad = new Ad("oglasss", "opis", date, file, true);
+		ad.setApprovedStatus(true);
 		adService.save(ad);
 		
 	    System.out.println(adService.findAll()+ "ISPISI SACUVANE" );
 	    Ad ad1 = new Ad("oglasss", "opis");
+	    ad1.setApprovedStatus(true);
 		adService.save(ad1);
+		
+		User1 user = new User1("Bojan", "Bojanic", "Vranje", "boki@gmail.com", "222", "555-111", "true", "adminSistem");
+	    userService.save(user);
+	    
+	    User1 user1 = new User1("Mika", "Mikic", "Beograd", "miki@gmail.com", "333", "444-111", "true", "adminFunZone");
+	    userService.save(user1);
 	}
 }

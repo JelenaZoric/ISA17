@@ -47,9 +47,9 @@
 				<tr>
 					<td>Uloga:</td>
 					
-				    <td><select name="regRole"><option value="adminFunZone">admin fan zone</option>
+				    <td><select name="regRole" id="comboRole"><option value="adminTheater">admin pozorista/bioskopa</option>
 				    <option value="adminSystem">admin sistema</option>
-				    <option value="adminTheater">admin pozorista</option>
+				    <option value="adminFunZone">admin fan zone</option>
 				    </select></td>
 				
 				</tr>
@@ -58,7 +58,40 @@
 				</tr>
 				</tbody>
 			</table>
+			<h1 id="title" style = "float: right; position: absolute; top:10px; left: 600px">Izaberite pozoriste ili bioskop:</h1>
+	<h2 id="theaters" style = "float: right; position: absolute; top:10px; left: 800px">Pozorista</h2>
+		<table id="theaterTable" class="table" style = "float: right; position: absolute; top:60px; left: 800px">
+			<tr class="header">
+				<th>Naziv</th>
+				<th>Adresa</th>
+				<th>Grad</th>
+			</tr>
+		</table>
+		<h2 id="cinemas" style = "float: right; position: absolute; top:300px; left: 800px">Bioskopi</h2>
+		<table id="cinemaTable" class="table" style = "float: right; position: absolute; top:350px; left: 800px">
+			<tr class="header">
+				<th>Naziv</th>
+				<th>Adresa</th>
+				<th>Grad</th>
+			</tr>
+		</table>
 			<script type="text/javascript">
+			$('#comboRole').change(function() {
+			//	alert($( "#comboRole option:selected" ).text());
+			 // alert('The option with value ' + $(this).val() + ' and text ' + $(this).text() + ' was selected.');
+				 if($( "#comboRole option:selected" ).text()=='admin pozorista/bioskopa'){
+					  
+					location.href = "http://localhost:8090/myapp/regAdmin.html"
+				  }else{
+					  
+					  $("#theaterTable").remove() 
+					  $("#cinemaTable").remove() 
+					  $("#theaters").remove() 
+					  $("#cinemas").remove() 
+					  $("#title").remove() 
+				  }
+
+			});
 
   $("#log").click(function() {
 	 // alert("test");
@@ -81,11 +114,33 @@
 			datatype: 'json'
 		});
 	});
+  
+  $(document).ready(function() {
+		$.ajax({
+			url: "http://localhost:8090/myapp/theaters/getTheaters"
+		}).then(function(data) {
+			for(i=0; i<data.length; i++) {
+				//location.href = "http://localhost:8090/myapp/regAdmin.html"
+				newRow = "<tr>"
+					+ "<td class=\"name\" width=40%><a href=\"theaterProfile.html?id="
+					+ data[i].id + "\">"
+					+ data[i].name + "</td>"
+					+ "<td class=\"address\" width = 30%>" + data[i].address + "</td>"
+					+ "<td class=\"city\" width=30%>" + data[i].city + "</td>"
+					+ "</tr>"
+				if(data[i].ttype == 't') {
+					$("#theaterTable").append(newRow)
+				} else {
+					$("#cinemaTable").append(newRow)
+				}
+			}
+		});
+	});
 </script>
 			
 			
 			 </div>
 		      </form>
-		    </div>
+		    </div>    
 		</body>
 </html>

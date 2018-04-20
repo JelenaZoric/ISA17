@@ -14,6 +14,8 @@
 	<a href="#pozorista">Lista pozorista</a>
 	<a href="#bioskopi">Lista bioskopa</a>
 	<a href="#prijatelji">Lista prijatelja</a>
+	<a href="#funZone"></a>
+	<div id="funZone"></div>
 	
 	<p></p>
 	 
@@ -43,6 +45,10 @@
 						nastavak= "<a href=\"profile.html?id=" + data[i].id + "\">" + data[i].name + " " + data[i].lastname + "</a>"
 						$("p").append(nastavak);
 						//$("#history").append(data[i].theaters[0].name);
+						
+						funZone = "<a href=\"funZona.html?id=" + data[i].id + "\">Fan zona</a>" 
+						$("#funZone").append(funZone);
+						
 						for(j=0; j<data[i].theaters.length; j++){
 							if(data[i].theaters[j].ttype=='t'){
 								newRow = "<tr>" + "<td class=\"code\">" + data[i].theaters[j].name + "</td>"

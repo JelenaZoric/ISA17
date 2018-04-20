@@ -172,4 +172,12 @@ public class UserController {
 			return new ResponseEntity<User1>(edited, HttpStatus.OK);
 			
 		}
+		@RequestMapping(value="/changePassword/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+		public ResponseEntity<User1> changePassword(@PathVariable("id") Long id, @RequestBody User1 user){
+			User1 edited = userService.findOne(id);
+			System.out.println("ADMIN        "  + edited.getId());
+			edited.setPassword(user.getPassword());
+			userService.save(edited);
+			return new ResponseEntity<User1>(edited, HttpStatus.OK);
+		}
 }

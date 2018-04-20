@@ -212,6 +212,10 @@ public class User1 implements Serializable {
 	public void setSeats(Set<Seat> seats) {
 		this.seats = seats;
 	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	
 	
 }

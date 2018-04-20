@@ -39,6 +39,9 @@ public class Ad implements Serializable{
 	@Column(nullable = true)
 	private boolean reservationStatus;
 	
+	@Column(nullable = true)
+	private boolean approvedStatus;
+	
 	@ManyToOne
 	private User1 user;
 	
@@ -68,6 +71,26 @@ public class Ad implements Serializable{
 		super();
 		this.name = name;
 		this.description = description;
+	}
+
+
+	public boolean isApprovedStatus() {
+		return approvedStatus;
+	}
+
+
+	public void setApprovedStatus(boolean approvedStatus) {
+		this.approvedStatus = approvedStatus;
+	}
+
+
+	public User1 getUser() {
+		return user;
+	}
+
+
+	public void setUser(User1 user) {
+		this.user = user;
 	}
 
 
