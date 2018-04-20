@@ -14,8 +14,6 @@
 	<a href="#pozorista">Lista pozorista</a>
 	<a href="#bioskopi">Lista bioskopa</a>
 	<a href="#prijatelji">Lista prijatelja</a>
-	<a href="#funZone"></a>
-	<div id="funZone"></div>
 	
 	<p></p>
 	 
@@ -45,11 +43,6 @@
 						nastavak= "<a href=\"profile.html?id=" + data[i].id + "\">" + data[i].name + " " + data[i].lastname + "</a>"
 						$("p").append(nastavak);
 						//$("#history").append(data[i].theaters[0].name);
-						
-						
-						funZone = "<a href=\"funZona.html?id=" + data[i].id + "\">Fan zona</a>" 
-						$("#funZone").append(funZone);
-						
 						for(j=0; j<data[i].theaters.length; j++){
 							if(data[i].theaters[j].ttype=='t'){
 								newRow = "<tr>" + "<td class=\"code\">" + data[i].theaters[j].name + "</td>"
@@ -121,9 +114,13 @@
 			</tr>
 		</table>
 		
-		<h3 id="reserv"></h3>
+		<h3 id="reserv">Rezervisana mesta</h3>
 		<table id="reservations" class = "table" style="width: 1200px">
 			<tr class="header">
+				<th></th>
+				<th></th>
+				<th></th>
+				<th></th>
 				<th></th>
 				<th></th>
 			</tr>
@@ -152,6 +149,36 @@
 				}
 			});
 			
+			$.ajax({
+				url: "http://localhost:8090/myapp/users/getUsers"
+			}).then(function(data) {
+				var today = new Date();
+				for(i=0; i<data.length; i++){
+					if(data[i].email==localStorage.getItem("email")){
+						//localStorage.setItem("id", data[i].id); //nooooooooooooooovooooooooo
+						
+						
+						for(j=0; j<data[i].seats.length; j++){
+								newRow = "<tr>" + "<td class=\"code\">" + data[i].seats[j].number + "</td>"
+											+ "<td>" + data[i].seats[j].hall.name + "</td>"
+											+ "<td>" + data[i].seats[j].hall.date.date + "</td>"
+											+ "<td>" + data[i].seats[j].hall.date.play.name + "</td>"
+											+ "<td>" + data[i].seats[j].hall.date.play.theater.name + "</td>"
+											
+								var dateOfPlay = new Date(data[i].seats[j].hall.date.date);
+								var dateDiff = dateOfPlay - today;
+								if(dateDiff > 1800000){ //30 min u milisekundama
+									newRow = newRow + "<td><a class=\"remove\" href=\"users/" + localStorage.getItem("id") + "/" + data[i].seats[j].id + "\">Odustani od rezervacije</a></td></tr>"
+								}
+								else{
+									newRow = newRow + "<td><a href=\"#\">Nema nazad</td></tr>"
+								}
+								$("#reservations").append(newRow)
+						}
+					}
+				}
+			})
+			
 		});
 		function myFunction(id, name) {
 			localStorage.setItem("choosen_theater_id", id);
@@ -161,8 +188,6 @@
 			$("#playy").append("Izaberite predstavu iz pozorista " + name)
 			var url_string = window.location.href;
 			console.log(url_string);
-			//var url = new URL(url_string);
-			//var id = url_string.substring(url_string.lastIndexOf('#') + 1);
 			console.log(id)
 			// document.getElementById("theatre").style.color = "red";
 			 $.ajax({
@@ -245,11 +270,13 @@
 				}).then(function(data) {
 					$("#seatTable").empty();
 					for(i=0; i<data.seats.length; i++) {
+						if(data.seats[i].reserved=="slobodno"){
 							newRow = "<tr>"
 								+ "<td class=\"name\">" + data.seats[i].number + "</td>"
 								+ "<td><a onclick=\"myFunctionReserve('" + date +"'," + data.seats[i].id + ",'" + data.seats[i].reserved +"'," + data.seats[i].number +")\" href=\"#" + data.seats[i].id + "\">Rezervisi mesto</a></td>"
 								+ "</tr>"
 							$("#seatTable").append(newRow)
+						}
 					}
 				});
 		}
@@ -261,8 +288,6 @@
 				id:seat_id,
 				number:seat_num,
 				reserved:seat_reserved
-				//city:"ccc",
-				//description:"ddd"
 			});
 			 $.ajax({
 					url: "http://localhost:8090/myapp/users/reserve/" + id,
@@ -271,40 +296,30 @@
 					contentType: "application/json",
 					datatype: 'json',
 					success: function(data){
-						var date1 = new Date(date);
-						console.log(date1);
 						var today = new Date();
 						console.log("heeej danas je " + today);
-						var dateDiff = date1 - today;
-						
-						
-						
-						$("#reserv").empty();
-						$("#reserv").append("Rezervisana mesta");
 						$("#reservations").empty();
 						console.log("uspesno");
 						//$("#history").empty();
 						//$("#historyCinema").empty();
-						console.log(data.name)
-					/*	for(j=0; j<data.theaters.length; j++){
-							console.log(data.theaters[j].name);
-								newRow = "<tr>" + "<td class=\"code\">" + data.theaters[j].name + "</td>"
-										+ "<td>" + data.theaters[j].address + "</td></tr>"
-								$("#history").append(newRow)
-							
-						} */
-						if(dateDiff > 1800000){
-							console.log(dateDiff + " nema nazad :0")
-							console.log(seat.num + "mestoooo")
-							button = "<button>Odustani od rezervacije mesta " + seat_num + "</button>"
-							$("#dismiss").append(button)
-						}
+						console.log(data.name);
+					
 						for(j=0; j<data.seats.length; j++){
-							//console.log(data.seats[j].name);
+								dateOfPlay = new Date(data.seats[j].hall.date.date);
+								var dateDiff = dateOfPlay - today;
 								newRow = "<tr>" + "<td class=\"code\">" + data.seats[j].number + "</td>"
-										//+ "<td>" + data.seats[j].reserved + "</td><a onclick=\"myFunctionDismiss('" + date +"'," + data.seats[j].id + ",'" + data.seats[j].reserved +"'," + data.seats[j].number +")\" href=\"#" + data.seats[j].id + "\">Povuci rezervaciju</a>" + "<td>" + "</tr>"
+											+ "<td>" + data.seats[j].hall.name + "</td>"
+											+ "<td>" + data.seats[j].hall.date.date + "</td>"
+											+ "<td>" + data.seats[j].hall.date.play.name + "</td>"
+											+ "<td>" + data.seats[j].hall.date.play.theater.name + "</td>"
+										
+								if(dateDiff > 1800000){ //30 min u milisekundama
+									newRow = newRow + "<td><a class=\"remove\" href=\"users/" + localStorage.getItem("id") + "/" + data.seats[j].id + "\">Odustani od rezervacije</a></td></tr>"
+								}
+								else{
+									newRow = newRow + "<td><a href=\"#\">Nema nazad</td></tr>"
+								}
 								$("#reservations").append(newRow)
-							
 						}
 						
 					}
@@ -344,7 +359,7 @@
 							}
 							
 						} 
-						
+						location.href="homepage.html";
 					}
 			 });  
 		}
@@ -385,6 +400,26 @@
 			    }
 			  }
 			}
+		
+		$(document).on("click", ".remove", function(event){
+			//ne salji get zahtev
+			event.preventDefault(); 
+			var confirmed = confirm("Da li ste sigurni da želite da uklonite?");
+			if(confirmed){
+			var url = $(this).attr("href")
+			$.ajax({
+	        	url: url,
+	        	type: "PUT",
+				//saljemo json i ocekujemo json nazad
+				contentType: "application/json",
+				datatype: 'json',
+	        	success: function(){
+					//alert("Karta je uspešno rezervisana!");
+	        		location.href="homepage.html"
+		        }
+			});
+		}
+		});
 		
 		</script>
 		

@@ -127,21 +127,41 @@ public class User1 implements Serializable {
 	public String getName() {
 		return this.name;
 	}
+	
+	public void setName(String name){
+		this.name = name;
+	}
 
 	public String getLastname() {
 		return this.lastname;
 	}
+	
+	public void setLastname(String lastname){
+		this.lastname = lastname;
+	}
 
 	public String getCity() {
 		return this.city;
+	}
+	
+	public void setCity(String city){
+		this.city = city;
 	}
 
 	public String getEmail() {
 		return this.email;
 	}
 	
+	public void setEmail(String email){
+		this.email = email;
+	}
+	
 	public String getPhone() {
 		return this.phone;
+	}
+	
+	public void setPhone(String phone){
+		this.phone = phone;
 	}
 	
 	public String getRole() {

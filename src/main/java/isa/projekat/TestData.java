@@ -75,22 +75,26 @@ public class TestData {
 		DateOfPlay date1 = new DateOfPlay("2018-04-20", p1);
 		DateOfPlay date2 = new DateOfPlay("2018-04-21", p1);
 		DateOfPlay date3 = new DateOfPlay("2018-04-22", p2);
+		DateOfPlay date5 = new DateOfPlay("2018-04-18", p2);
 		DateOfPlay date4 = new DateOfPlay("2018-04-23", p3);
 		
 		dateService.save(date1);
 		dateService.save(date2);
 		dateService.save(date3);
 		dateService.save(date4);
+		dateService.save(date5);
 		
 		Hall hall1 = new Hall("sala A", 10, date1);
 		Hall hall2 = new Hall("sala B", 15, date1);
 		Hall hall3 = new Hall("sala C", 12, date2);
 		Hall hall4 = new Hall("sala D", 20, date3);
+		Hall hall5 = new Hall("sala E", 20, date5);
 		
 		hallService.save(hall1);
 		hallService.save(hall2);
 		hallService.save(hall3);
 		hallService.save(hall4);
+		hallService.save(hall5);
 		
 		Seat seat1 = new Seat(1, "slobodno", 30, hall1);
 		Seat seat2 = new Seat(2, "slobodno", 20, hall1);
@@ -103,6 +107,11 @@ public class TestData {
 		Seat seat8 = new Seat(8, "slobodno", 15, hall4);
 		Seat seat9 = new Seat(9, "slobodno", hall4);
 		
+		Seat seat10 = new Seat(10, "slobodno", 3, hall5);
+		Seat seat11 = new Seat(11, "slobodno", hall5);
+		Seat seat12 = new Seat(12, "slobodno", 22, hall5);
+		Seat seat13 = new Seat(13, "slobodno", hall5);
+		
 		seatService.save(seat1);
 		seatService.save(seat2);
 		seatService.save(seat3);
@@ -111,7 +120,11 @@ public class TestData {
 		seatService.save(seat6);
 		seatService.save(seat7);
 		seatService.save(seat8);
-		seatService.save(seat9);	
+		seatService.save(seat9);
+		seatService.save(seat10);
+		seatService.save(seat11);
+		seatService.save(seat12);
+		seatService.save(seat13);	
 	
 		@SuppressWarnings("deprecation")
 		Date date = new Date(1200, 12, 1);
@@ -119,10 +132,8 @@ public class TestData {
 		Ad ad = new Ad("oglasss", "opis", date, file, true);
 		adService.save(ad);
 		
+	    System.out.println(adService.findAll()+ "ISPISI SACUVANE" );
 	    Ad ad1 = new Ad("oglasss", "opis");
 		adService.save(ad1);
-		
-		User1 user = new User1("Bojan", "Bojanic", "Vranje", "boki@gmail.com", "222", "555-111", "true", "adminSistem");
-	    userService.save(user);
 	}
 }

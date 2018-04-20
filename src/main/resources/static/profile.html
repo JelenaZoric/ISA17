@@ -13,6 +13,55 @@
 	<div>
 		<h3 id="result"></h3>
 		<h3 id="name"></h3>
+		<a href="#editModal" data-toggle="modal" data-target="#editModal">Izmeni podatke</a>
+		<table id="userData" class = "table" style="width: 1200px">
+			<tr class="header">
+				<th></th>
+			</tr>
+		</table>
+		
+		<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Izmena</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <form id="editForm">
+		      <div class="modal-body">
+					<input type="hidden" name="id" id="id" />
+				<p>
+					<label for="editName">Ime</label> <input type="text" name="name"
+						id="editName" />
+				</p>	
+				<p>
+					<label for="editLastname">Prezime</label> <input type="text" name="lastname"
+						id="editLastname" />
+				</p>	
+				<p>
+					<label for="editCity">Grad</label> <input type="text" name="city"
+						id="editCity" />
+				</p>
+				<p>
+					<label for="editEmail">Email</label> <input type="text" name="email"
+						id="editEmail" />
+				</p>
+				<p>
+					<label for="editPhone">Telefon</label> <input type="text" name="phone"
+						id="editPhone" />
+				</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+		        <button type="button" class="btn btn-primary" id="edit">Potvrda</button>
+		      </div>
+		      </form>
+		    </div>
+		</div>
+	</div>
+		
 	</div>
 	<div>
 		
@@ -31,8 +80,37 @@
 					$("#name").append(data.name);
 					$("#name").append(" ");
 					$("#name").append(data.lastname);
+					
+					newRow = "<tr><td>" + data.name + "</td></tr>" 
+							+ "<td>" + data.lastname + "</td></tr>"
+							+ "<td>" + data.city + "</td></tr>"
+							+ "<td>" + data.email + "</td></tr>"
+							+ "<td>" + data.phone + "</td></tr>"
+					$("#userData").append(newRow);
 				});  
 			}); 
+			
+			$("#edit").click(function(){
+				//pripremamo JSON koji cemo poslati
+				formData = JSON.stringify({
+	                name:$("#editForm [name='name']").val(),
+	                lastname:$("#editForm [name='lastname']").val(),
+	                city:$("#editForm [name='city']").val(),
+	                email:$("#editForm [name='email']").val(),
+	                phone:$("#editForm [name='phone']").val()
+	            });
+				$.ajax({
+					url: "http://localhost:8090/myapp/users/" + id,
+					type: "PUT",
+					data: formData,
+					//saljemo json i ocekujemo json nazad
+					contentType: "application/json",
+					datatype: 'json',
+					success: function(data) {
+						location.href=url
+			   	    }
+				});
+			});
 		</script>
 	</div>
 </body>

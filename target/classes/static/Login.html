@@ -5,7 +5,6 @@
 <title>Logovanje</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="scripts/jquery-3.2.1.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="bootstrap.css" type="text/css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="text/javascript">
@@ -27,7 +26,11 @@ $("#log").click(function() {
 				</tr>
 				<tr>
 					<td>Lozinka:</td>
-					<td><input type="password" class="form-control" name="regLoz" placeholder = "Unesite lozinku"></td>
+					<td><input id="pass" type="password" class="form-control" name="regLoz" placeholder = "Unesite lozinku"></td>
+				</tr>
+				<tr>
+					<td>Ponovite lozinku:</td>
+					<td><input id="pass2" type="password" class="form-control" name="regLoz2" placeholder = "Ponovite lozinku"></td>
 				</tr>
 				<tr>
 					<td>Ime:</td>
@@ -55,7 +58,7 @@ $("#log").click(function() {
 			
 			<script type="text/javascript">
 
-  document.write("Dobar dan!");
+ // document.write("Dobar dan!");
   $("#log").click(function() {
 	 // alert("test");
 	  formData = JSON.stringify({
@@ -67,14 +70,22 @@ $("#log").click(function() {
           phone:$("#inputForm [name='regTel']").val()
        
       });
+	  if(document.getElementById('pass').value==document.getElementById('pass2').value){
 		$.ajax({
 			url: "http://localhost:8090/myapp/users",
 			type: "POST",
 			data: formData,
 			//saljemo json i ocekujemo json nazad
 			contentType: "application/json",
-			datatype: 'json'
+			datatype: 'json',
+			success: function(){
+				alert("Poslat Vam je email za potvrdu registracije.");
+			}
 		});
+	  }
+	  else {
+		  alert("Proverite lozinku!");
+	  }
 	});
 </script>
 			
