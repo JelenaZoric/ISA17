@@ -16,6 +16,7 @@ public class Converters {
 		dto.setDescription(model.getDescription());
 		dto.setTtype(model.getTtype());
 		dto.setProgram(model.getProgram());
+		dto.setAdmin(model.getAdmin());
 		return dto;
 	}
 	
@@ -31,6 +32,7 @@ public class Converters {
 		dto.setName(play.getName());
 		dto.setPrice(play.getPrice());
 		dto.setTheater(play.getTheater());
+		dto.setImage(play.getImage());
 		return dto;
 	}
 	
@@ -40,6 +42,7 @@ public class Converters {
 		dto.setHalls(date.getHalls());
 		dto.setId(date.getId());
 		dto.setPlay(date.getPlay());
+		dto.setUserDates(date.getUserDates());
 		return dto;
 	}
 	

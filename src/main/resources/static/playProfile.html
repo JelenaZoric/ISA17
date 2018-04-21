@@ -16,6 +16,15 @@
 			$.ajax({
 				url:"http://localhost:8090/myapp/plays/getPlay?id=" + id
 			}).then(function(data) {
+				//izvlacenje relativne putanje slike
+				if(data.image != null) {
+					var img = data.image.toString();
+					var pos = img.indexOf("images");
+					img = img.slice(pos, img.length)
+				} else {
+					var img = "";
+				}
+				
 				rows = "<tr><td class=\"name\">Naziv: " + data.name + "</td></tr>"
 					+ "<tr><td class=\"genre\">Žanr: " + data.genre + "</td></tr>"
 					+ "<tr><td class=\"director\">Reditelj: " + data.director + "</td></tr>"
@@ -23,6 +32,8 @@
 					+ "<tr><td class=\"avgScore\">Prosečna ocena: " + data.avgScore + "</td></tr>"
 					+ "<tr><td class=\"description\">Opis: " + data.description + "</td></tr>"
 					+ "<tr><td class=\"price\">Cena karte: " + data.price + " din</td></tr>"
+					+ "<tr><td class=\"image\">Poster: <img src=\"" + img + "\" alt=\"Poster predstave\"></td></tr>"
+			
 				$("#dataTable").append(rows)
 				$("#editNaziv").val(data.name)
 				$("#editZanr").val(data.genre)

@@ -1,5 +1,6 @@
 package isa.projekat.model.dto;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +18,8 @@ public class PlayDTO {
 	private String director;
 	
 	private int duration;
+	
+	private File image;
 	
 	private float avgScore;
 	
@@ -113,4 +116,12 @@ public class PlayDTO {
 		this.dates = dates;
 	}
 
+	public File getImage() {
+		return image;
+	}
+
+	public void setImage(File image) {
+		this.image = image;
+	}
+	
 }

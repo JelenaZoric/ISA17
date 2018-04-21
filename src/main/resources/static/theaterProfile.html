@@ -12,160 +12,195 @@
 var url_string = window.location.href;
 var url = new URL(url_string);
 var id = url.searchParams.get("id");
+var adminLogged;
+var logged;
+
 function addProgram(value1, value2, set) {
 	newRow = "<tr><td><a href=\"playProfile.html?id=" + value1.id + "\">" + value1.name + "</td><td>"
-			+ value1.director + "</td><td>"
+			+ value1.director + "</td><td id=\"playScore\">"
 			+ value1.avgScore + "</td>"
-			+ "<td><a class=\"remove\" href=\"plays/" + id + "/" + value1.id + "\">Ukloni</a></td>"
+			+ "<td class=\"removetd\"><a class=\"remove\" href=\"plays/" + value1.id + "\">Ukloni</a></td>"
 			+ "</tr>"
 	$("#programTable").append(newRow)
 }
 
-	$(document).ready(function() {
-		$.ajax({
-			url:"http://localhost:8090/myapp/theaters/getTheater?id=" + id
-		}).then(function(data) {
-			for(i=0; i<data.program.length; i++){
-				console.log(data.program[i]);
-			}
-			rows = "<tr><td class=\"name\">" + data.name + "</td></tr>"
-			+ "<tr><td class=\"address\">" + data.address + "</td></tr>"
-			+ "<tr><td class=\"city\">" + data.city + "</td></tr>"
-			+ "<tr><td class=\"description\">Opis: " + data.description + "</td></tr>"
-			$("#dataTable").append(rows)
-			$("#editNaziv").val(data.name)
-			$("#editAdresa").val(data.address)
-			$("#editGrad").val(data.city)
-			$("#editOpis").val(data.description)
-			data.program.forEach(addProgram)
-		});
-		
-		$.ajax({
-			url:"http://localhost:8090/myapp/theaters/quickres/" + id
-		}).then(function(data) {
-			for(i = 0; i<data.length; i++) {
-				row = "<tr><td class=\"number\">" + data[i].number + "</td>"
-					+ "<td class=\"discount\">" + data[i].discount + "%</td><"
-					+ "<td><a class=\"reserve\" href=\"seats/reserve/" + data[i].id + "\">Rezerviši</a></td></tr>"
-				$("#resTable").append(row)
-			}
-		});
-		
-		$("#edit").click(function(){
-			//pripremamo JSON koji cemo poslati
-			formData = JSON.stringify({
-                name:$("#editForm [name='name']").val(),
-                address:$("#editForm [name='address']").val(),
-                city:$("#editForm [name='city']").val(),
-                description:$("#editForm [name='description']").val(),
-            });
-			$.ajax({
-				url: "http://localhost:8090/myapp/theaters/" + id,
-				type: "PUT",
-				data: formData,
-				//saljemo json i ocekujemo json nazad
-				contentType: "application/json",
-				datatype: 'json',
-				success: function(data) {
-					location.href=url
-		   	    }
-			});
-		});
-		
-		$("#add").click(function(){
-			//pripremamo JSON koji cemo poslati
-			formData = JSON.stringify({
-                name:$("#inputForm [name='name']").val(),
-                genre:$("#inputForm [name='genre']").val(),
-                director:$("#inputForm [name='director']").val(),
-                duration:$("#inputForm [name='duration']").val(),
-                avgScore:$("#inputForm [name='avgScore']").val(),
-                description:$("#inputForm [name='description']").val(),
-                price:$("#inputForm [name='price']").val(),
-            });
-			$.ajax({
-				//dodajemo id pozorista u putanju
-				url: "http://localhost:8090/myapp/plays/" + id,
-				type: "POST",
-				data: formData,
-				//saljemo json i ocekujemo json nazad
-				contentType: "application/json",
-				datatype: 'json',
-				success: function(data) {
-					newRow = 
-						"<tr><td><a href=\"playProfile.html?id=" + data.id + "\">" + data.name + "</td><td>"
-						+ data.director + "</td><td>"
-						+ data.avgScore + "</td>"
-						+ "<td><a class=\"remove\" href=\"plays/" + id + "/" + data.id + "\">Ukloni</a></td>"
-						+ "</tr>"
-					$("#programTable").append(newRow)
-				  }
-				});
-			$('#inputModal').modal('toggle');
-		});
-	});
-	
-	$(document).on("click", ".remove", function(event){
-		//ne salji get zahtev
-		event.preventDefault(); 
-		
-		var confirmed = confirm("Da li ste sigurni da želite da uklonite?");
-		if(confirmed){
-		
-			var url = $(this).attr("href")
-			//red koji se treba izbrisati ako je brisanje na serveru bilo uspesno
-			tr_parent = $(this).closest("tr")
-			$.ajax({
-	        	url: url,
-	        	type: "DELETE",
-	        	success: function(){
-	        		//ukloni i na strani 
-					tr_parent.remove()
-		        }
-			});
+$(document).ready(function() {
+	$.ajax({
+		url:"http://localhost:8090/myapp/theaters/quickres/" + id
+	}).then(function(data) {
+		for(i = 0; i<data.length; i++) {
+			row = "<tr><td class=\"number\">" + data[i].number + "</td>"
+				+ "<td class=\"discount\">" + data[i].discount + "%</td>"
+				+ "<td class=\"play\">" + data[i].hall.date.play.name + "</td>"
+				+ "<td class=\"date\">" + data[i].hall.date.date + "</td>"
+				+ "<td class=\"hall\">" + data[i].hall.name + "</td>"
+				+ "<td class=\"reservetd\"><a class=\"reserve\" href=\"seats/reserve/" + localStorage.getItem("id") + "/" + data[i].id + "\">Rezerviši</a></td></tr>"
+			$("#resTable").append(row)
 		}
 	});
 	
-	$(document).on("click", ".reserve", function(event){
-		//ne salji get zahtev
-		event.preventDefault(); 
+	$.ajax({
+		url:"http://localhost:8090/myapp/theaters/getTheater?id=" + id
+	}).then(function(data) {
 		
-		var url = $(this).attr("href")
+		/*
+		if(!adminLogged) {
+			$(".admin").remove();
+			$("#programTable").remove(".remove");
+		} else if(!logged) {
+			$(".reserve").remove();
+		}*/
+		rows = "<tr><td class=\"name\">" + data.name + "</td></tr>"
+		+ "<tr><td class=\"address\">" + data.address + "</td></tr>"
+		+ "<tr><td class=\"city\">" + data.city + "</td></tr>"
+		+ "<tr><td class=\"description\">Opis: " + data.description + "</td></tr>"
+		$("#dataTable").append(rows)
+		$("#editNaziv").val(data.name)
+		$("#editAdresa").val(data.address)
+		$("#editGrad").val(data.city)
+		$("#editOpis").val(data.description)
+		data.program.forEach(addProgram)
+		
+		if(data.admin.id == localStorage.getItem("id")) {
+			adminLogged = true;
+			logged = false;
+			$(".reservetd").remove();
+			//console.log(adminLogged);
+		} else if(localStorage.getItem("id") != null) {
+			logged = true;
+			adminLogged = false;
+			$(".removetd").remove();
+			$(".admin").remove();
+		}
+	});
+	//console.log(logged)
+	
+	$("#edit").click(function(){
+		//pripremamo JSON koji cemo poslati
+		formData = JSON.stringify({
+            name:$("#editForm [name='name']").val(),
+            address:$("#editForm [name='address']").val(),
+            city:$("#editForm [name='city']").val(),
+            description:$("#editForm [name='description']").val(),
+        });
 		$.ajax({
-        	url: url,
-        	type: "PUT",
+			url: "http://localhost:8090/myapp/theaters/" + id,
+			type: "PUT",
+			data: formData,
 			//saljemo json i ocekujemo json nazad
 			contentType: "application/json",
 			datatype: 'json',
-        	success: function(){
-				alert("Karta je uspešno rezervisana!");
-        		location.href="theaterProfile.html?id=" + id
-	        }
+			success: function(data) {
+				location.href=url
+	   	    }
 		});
 	});
+	
+	$("#add").click(function(){
+		//pripremamo JSON koji cemo poslati
+		formData = JSON.stringify({
+            name:$("#inputForm [name='name']").val(),
+            genre:$("#inputForm [name='genre']").val(),
+            director:$("#inputForm [name='director']").val(),
+            duration:$("#inputForm [name='duration']").val(),
+            avgScore:$("#inputForm [name='avgScore']").val(),
+            description:$("#inputForm [name='description']").val(),
+            price:$("#inputForm [name='price']").val(),
+        });
+		$.ajax({
+			//dodajemo id pozorista u putanju
+			url: "http://localhost:8090/myapp/plays/" + id,
+			type: "POST",
+			data: formData,
+			//saljemo json i ocekujemo json nazad
+			contentType: "application/json",
+			datatype: 'json',
+			success: function(data) {
+				newRow = 
+					"<tr><td><a href=\"playProfile.html?id=" + data.id + "\">" + data.name + "</td><td>"
+					+ data.director + "</td><td>"
+					+ data.avgScore + "</td>"
+					+ "<td class=\"removetd\"><a class=\"remove\" href=\"plays/" + data.id + "\">Ukloni</a></td>"
+					+ "</tr>"
+				$("#programTable").append(newRow)
+			  }
+			});
+		$('#inputModal').modal('toggle');
+	});
+	/*
+	console.log(adminLogged)
+	console.log(localStorage.getItem("id"))
+	console.log(logged)
+	*/
+	
+});
+
+$(document).on("click", ".remove", function(event){
+	//ne salji get zahtev
+	event.preventDefault(); 
+	
+	var confirmed = confirm("Da li ste sigurni da želite da uklonite?");
+	if(confirmed){
+	
+		var url = $(this).attr("href")
+		//red koji se treba izbrisati ako je brisanje na serveru bilo uspesno
+		tr_parent = $(this).closest("tr")
+		$.ajax({
+        	url: url,
+        	type: "DELETE",
+        	success: function(){
+        		//ukloni i na strani 
+				tr_parent.remove()
+	        }
+		});
+	}
+});
+
+$(document).on("click", ".reserve", function(event){
+	//ne salji get zahtev
+	event.preventDefault(); 
+	
+	var url = $(this).attr("href")
+	$.ajax({
+    	url: url,
+    	type: "PUT",
+		//saljemo json i ocekujemo json nazad
+		contentType: "application/json",
+		datatype: 'json',
+    	success: function(){
+			alert("Karta je uspešno rezervisana!");
+    		location.href="theaterProfile.html?id=" + id
+        }
+	});
+});
 </script>
 </head>
 <body>
 	<h2>Profil pozorišta</h2>
-	<a href="#editModal" data-toggle="modal" data-target="#editModal">Izmeni profil</a>
+	<a class="admin" href="#editModal" data-toggle="modal" data-target="#editModal">Izmeni profil</a>
 	<table id="dataTable" class="table">
 	</table>
 	<h3>Program</h3>
-	<a href="#inputModal" data-toggle="modal" data-target="#inputModal">Dodaj</a>
+	<a class="admin" href="#inputModal" data-toggle="modal" data-target="#inputModal">Dodaj</a>
 	<table id="programTable" class="table">
 		<tr><th>Naziv</th>
 			<th>Režija</th>
 			<th>Prosečna ocena</th>
-			<th></th>
+			<th class="removetd"></th>
 		</tr>
 	</table>
 	<h3>Karte na popustu</h3>
 	<table id="resTable" class="table">
 		<tr><th>Broj sedišta</th>
 			<th>Popust</th>
-			<th></th>
+			<th>Predstava</th>
+			<th>Termin</th>
+			<th>Sala</th>
+			<th class="reservetd"></th>
 		</tr>
 	</table>
+	<div class="admin">
+	</div>
 	<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">

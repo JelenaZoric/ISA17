@@ -14,6 +14,7 @@ import isa.projekat.model.Play;
 import isa.projekat.model.Seat;
 import isa.projekat.model.Theater;
 import isa.projekat.model.User1;
+import isa.projekat.model.UserDate;
 import isa.projekat.repository.AdRepository;
 import isa.projekat.repository.DateRepository;
 import isa.projekat.service.AdService;
@@ -22,6 +23,7 @@ import isa.projekat.service.HallService;
 import isa.projekat.service.PlayService;
 import isa.projekat.service.SeatService;
 import isa.projekat.service.TheaterService;
+import isa.projekat.service.UserDateService;
 import isa.projekat.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,19 +56,26 @@ public class TestData {
 	@Autowired
 	private SeatService seatService;
 	
+	@Autowired
+	private UserDateService userDateService;
 	
 	@PostConstruct
 	private void init(){
 		
-		Theater t1 = new Theater("Atelje 212", "Svetogorska 21", "Beograd", "", 't');
-		Theater t2 = new Theater("Narodno pozorište Kikinda", "Trg srpskih dobrovoljaca 28", "Kikinda", "", 't');
+		User1 adminT1 = new User1("Kosta", "Kostić", "Niš", "kosta@gmail.com", "333", "233-233", "true", "adminTheater");
+		userService.save(adminT1);
+		
+		Theater t1 = new Theater("Atelje 212", "Svetogorska 21", "Beograd", "", 't', adminT1);
+		Theater t2 = new Theater("Narodno pozorište Kikinda", "Trg srpskih dobrovoljaca 28", "Kikinda", "", 't', adminT1);
 		
 		theaterService.save(t1);
 		theaterService.save(t2);
 		
+		File img = new File("images/kauboji.jpg");
+		
 		Play p1 = new Play("Pomorandžina kora", "drama", "Goran Marković", 93, 3.4f, "", 400, t1);
 		Play p2 = new Play("Smrt čoveka na Balkanu", "komedija", "Miroslav Momčilović", 100, 3.9f, "", 100, t2);
-		Play p3 = new Play("Kauboji", "mjuzikl", "Kokan Mladenović", 90, 4.2f, "", 300, t2);
+		Play p3 = new Play("Kauboji", "mjuzikl", "Kokan Mladenović", 90, 4.2f, "", 300, t2, img);
 		
 		playService.save(p1);
 		playService.save(p2);
@@ -143,5 +152,17 @@ public class TestData {
 	    
 	    User1 user1 = new User1("Mika", "Mikic", "Beograd", "miki@gmail.com", "333", "444-111", "true", "adminFunZone");
 	    userService.save(user1);
+	    
+	    Set<Theater> theaters = new HashSet<Theater>();
+	    theaters.add(t1);
+	    theaters.add(t2);
+	    
+	    User1 regUser = new User1("Ilija", "Jović", "Apatin", "ilija@gmail.com", "444", "654-456", "true", theaters, new HashSet<Seat>());
+	    userService.save(regUser);
+	    
+	    UserDate userdate1 = new UserDate(regUser, date1, 5);
+	    UserDate userdate2 = new UserDate(regUser, date4);
+	    userDateService.save(userdate1);
+	    userDateService.save(userdate2);
 	}
 }

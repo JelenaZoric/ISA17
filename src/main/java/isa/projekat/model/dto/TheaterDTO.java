@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import isa.projekat.model.Play;
+import isa.projekat.model.User1;
 
 public class TheaterDTO implements Serializable {
 	
@@ -21,6 +22,8 @@ public class TheaterDTO implements Serializable {
 	private char ttype;
 	
 	private Set<Play> program;
+	
+	private User1 admin;
 
 	public TheaterDTO() {
 		super();
@@ -83,6 +86,12 @@ public class TheaterDTO implements Serializable {
 		this.program = program;
 	}
 	
-	
+	public User1 getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(User1 admin) {
+		this.admin = admin;
+	}
 
 }

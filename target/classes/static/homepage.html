@@ -34,6 +34,15 @@
 			</tr>
 		</table>
 		
+		<h2>Istorija posećivanja predstava i projekcija</h2>
+		<table id="historyPlay" class="table" style="width: 1200px">
+			<tr class="header">
+				<th>Naziv</th>
+				<th>Datum</th>
+				<th>Vaša ocena</th>
+			</tr>
+		</table>
+		
 		<script type="text/javascript">
 		$(document).ready(function(){
 			$.ajax({
@@ -64,7 +73,52 @@
 					}
 				}
 			})
+			
+			$.ajax({
+				url:"http://localhost:8090/myapp/userdates"
+			}).then(function(data) {
+				for(i=0; i<data.length; i++) {
+					
+					if(data[i].user.id == localStorage.getItem("id")) {
+						newRow = "<tr>" + "<td class=\"name\">" + data[i].date.play.name + "</td>"
+							+ "<td>" + data[i].date.date + "</td>"
+						if(data[i].score == 0) {
+							newRow = newRow + "<td>"
+								+ "<a class=\"rate\" href=\"userdates/rate/" + data[i].id + "?score=1\">1  </a>"
+								+ "<a class=\"rate\" href=\"userdates/rate/" + data[i].id + "?score=2\">2  </a>"
+								+ "<a class=\"rate\" href=\"userdates/rate/" + data[i].id + "?score=3\">3  </a>"
+								+ "<a class=\"rate\" href=\"userdates/rate/" + data[i].id + "?score=4\">4  </a>"
+								+ "<a class=\"rate\" href=\"userdates/rate/" + data[i].id + "?score=5\">5</a>"
+								+ "</td></tr>"
+						} else {
+							newRow = newRow + "<td>" + data[i].score + "</td></tr>"
+						}
+						$("#historyPlay").append(newRow)
+					}
+				}
+			})
 		})
+		
+		$(document).on("click", ".rate", function(event){
+			//ne salji get zahtev
+			event.preventDefault(); 
+		
+			var url_string = $(this).attr("href")
+			//var posRate = url_string.indexOf("rate/");
+			//var posQ = url_string.indexOf("?");
+			//var id = url_string.slice(posRate + 5, posQ)
+			//console.log(id)
+			$.ajax({
+        		url: url_string,
+        		type: "PUT",
+				//saljemo json i ocekujemo json nazad
+				contentType: "application/json",
+				datatype: 'json',
+        		success: function(){
+        			location.href="homepage.html"
+	        	}
+			});
+		});
 	</script> 
 		
 	</div>

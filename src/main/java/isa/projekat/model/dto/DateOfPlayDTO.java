@@ -5,6 +5,7 @@ import java.util.Set;
 
 import isa.projekat.model.Hall;
 import isa.projekat.model.Play;
+import isa.projekat.model.UserDate;
 
 public class DateOfPlayDTO {
 
@@ -15,6 +16,8 @@ public class DateOfPlayDTO {
 	private Play play;
 	
 	private Set<Hall> halls = new HashSet<Hall>();
+	
+	private Set<UserDate> userDates = new HashSet<UserDate>();
 
 	public DateOfPlayDTO() {
 		super();
@@ -51,6 +54,14 @@ public class DateOfPlayDTO {
 
 	public void setHalls(Set<Hall> halls) {
 		this.halls = halls;
+	}
+
+	public Set<UserDate> getUserDates() {
+		return userDates;
+	}
+
+	public void setUserDates(Set<UserDate> userDates) {
+		this.userDates = userDates;
 	}
 	
 }

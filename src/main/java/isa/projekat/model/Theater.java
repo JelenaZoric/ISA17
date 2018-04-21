@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -53,6 +54,9 @@ public class Theater implements Serializable {
 //	@JoinTable(name="theater_play", joinColumns = { @JoinColumn(name = "theater_id") }, inverseJoinColumns = { @JoinColumn(name = "play_id")})
 	private Set<Play> program = new HashSet<Play>();
 	
+	@ManyToOne
+	private User1 admin;
+	
 	//konfiguracija segmenata i mesta u salama
 	
 	public Theater() {}
@@ -75,6 +79,16 @@ public class Theater implements Serializable {
 		this.description = description;
 		this.ttype = ttype;
 		this.program = program;
+	}
+	
+	public Theater(String name, String address, String city, String description, char type, User1 admin) {
+		super();
+		this.name = name;
+		this.address = address;
+		this.city = city;
+		this.description = description;
+		this.ttype = type;
+		this.admin = admin;
 	}
 
 	public Long getId() {
@@ -131,5 +145,13 @@ public class Theater implements Serializable {
 
 	public void setProgram(Set<Play> program) {
 		this.program = program;
+	}
+	
+	public User1 getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(User1 admin) {
+		this.admin = admin;
 	}
 }

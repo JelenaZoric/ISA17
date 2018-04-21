@@ -37,6 +37,10 @@ public class DateOfPlay {
 	@JsonIgnore
 //	@JoinTable(name = "date_hall", joinColumns = { @JoinColumn(name = "date_id") }, inverseJoinColumns = { @JoinColumn(name = "hall_id") })
 	private Set<Hall> halls = new HashSet<Hall>();
+	
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="date")
+	@JsonIgnore
+	private Set<UserDate> userDates = new HashSet<UserDate>();
 
 	public DateOfPlay() {
 		super();
@@ -92,4 +96,11 @@ public class DateOfPlay {
 		this.play = play;
 	}
 	
+	public Set<UserDate> getUserDates() {
+		return userDates;
+	}
+
+	public void setUserDates(Set<UserDate> userDates) {
+		this.userDates = userDates;
+	}
 }

@@ -16,6 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 public class User1 implements Serializable {
@@ -64,6 +66,10 @@ public class User1 implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name="user_ad", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "ad_id")})
 	private Set<Ad> ad = new HashSet<Ad>();
+	
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="user")
+	@JsonIgnore
+	private Set<UserDate> userDates = new HashSet<UserDate>();
 	
 	public User1() {
 		
@@ -115,6 +121,20 @@ public class User1 implements Serializable {
 		this.lastname = lastname;
 	}
 
+	public User1(String name, String lastname, String city, String email, String password, String phone, String enabled, 
+			Set<Theater> theaters, Set<Seat> seats, Set<DateOfPlay> dates) {
+		super();
+		this.name = name;
+		this.lastname = lastname;
+		this.city = city;
+		this.email = email;
+		this.password = password;
+		this.phone = phone;
+		this.enabled = enabled;
+		this.theaters = theaters;
+		this.seats = seats;
+		//this.dates = dates;
+	}
 	
 	public Set<Ad> getAd() {
 		return ad;
@@ -217,5 +237,12 @@ public class User1 implements Serializable {
 		this.password = password;
 	}
 	
+	public Set<UserDate> getUserDates() {
+		return userDates;
+	}
+
+	public void setUserDates(Set<UserDate> userDates) {
+		this.userDates = userDates;
+	}	
 	
 }

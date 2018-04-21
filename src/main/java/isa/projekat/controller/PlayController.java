@@ -74,13 +74,11 @@ public class PlayController {
 	}
 		
 	//brisanje predstave
-	@RequestMapping(value="/{theater_id}/{id}", method=RequestMethod.DELETE)
-	public ResponseEntity<Play> remove(@PathVariable("id") Long id, @PathVariable("theater_id") Long theater_id) {
-		Theater theater = theaterService.findOne(theater_id);
-		Play deleted = playService.findOne(id);
-		theater.getProgram().remove(deleted);
-		theaterService.save(theater);
-		System.out.println("obrisao");
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	public ResponseEntity<Play> remove(@PathVariable("id") Long id) {
+		Play deleted = playService.delete(id);
+		//theater.getProgram().remove(deleted);
+		//theaterService.save(theater);
 		return new ResponseEntity<Play>(deleted, HttpStatus.NO_CONTENT);
 	}
 }

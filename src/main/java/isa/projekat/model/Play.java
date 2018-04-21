@@ -1,5 +1,6 @@
 package isa.projekat.model;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,6 +49,7 @@ public class Play implements Serializable {
 	private int duration;	//trajanje u minutima
 	
 	//poster
+	private File image;
 	
 	@Column(nullable = true)
 	private float avgScore;
@@ -98,6 +100,20 @@ public class Play implements Serializable {
 		this.description = description;
 		this.price = price;
 		this.theater = theater;
+	}
+	
+	public Play(String name, String genre, String director,
+			int duration, float avgScore, String description, int price, Theater theater, File image) {
+		super();
+		this.name = name;
+		this.genre = genre;
+		this.director = director;
+		this.duration = duration;
+		this.avgScore = avgScore;
+		this.description = description;
+		this.price = price;
+		this.theater = theater;
+		this.image = image;
 	}
 
 	public Long getId() {
@@ -184,6 +200,12 @@ public class Play implements Serializable {
 		this.theater = theater;
 	}
 	
-	
+	public File getImage() {
+		return image;
+	}
+
+	public void setImage(File image) {
+		this.image = image;
+	}
 	
 }

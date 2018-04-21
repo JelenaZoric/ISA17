@@ -10,10 +10,12 @@ import isa.projekat.model.Play;
 import isa.projekat.model.Seat;
 import isa.projekat.model.Theater;
 import isa.projekat.model.User1;
+import isa.projekat.model.UserDate;
 import isa.projekat.repository.UserRepository;
 import isa.projekat.service.EmailService;
 import isa.projekat.service.SeatService;
 import isa.projekat.service.TheaterService;
+import isa.projekat.service.UserDateService;
 import isa.projekat.service.UserService;
 
 import org.slf4j.Logger;
@@ -52,6 +54,9 @@ public class UserController {
 	
 	@Autowired
 	private SeatService seatService;
+	
+	@Autowired
+	private UserDateService userDateService;
 
 /*	@RequestMapping(value = "/search/{name}/{lastname}",
 					method = RequestMethod.GET,
@@ -131,6 +136,8 @@ public class UserController {
 		seatService.save(seat);
 		edited.getSeats().add(seat);
 		userService.save(edited);
+		UserDate userDate = new UserDate(edited, seat.getHall().getDate());
+		userDateService.save(userDate);
 		return new ResponseEntity<User1>(edited, HttpStatus.OK);
 	}
 	
