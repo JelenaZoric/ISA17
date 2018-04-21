@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import isa.projekat.model.Seat;
 import isa.projekat.model.User1;
 
 
@@ -58,6 +59,29 @@ public class EmailService {
 		//mail.setFrom("teodora.b.95@gmail.com");
 		mail.setSubject("Potvrda logovanja");
 		mail.setText("Pozdrav " + user.getName() + ",\n\nupravo si uspela da posaljes mail.");
+		javaMailSender.send(mail);
+
+		System.out.println("Email poslat!");
+	}
+	
+	@Async
+	public void sendEmailInvitation(User1 toWho, User1 fromWho, Seat seat) throws MailException, InterruptedException {
+
+		//Simulacija duze aktivnosti da bi se uocila razlika
+		System.out.println("usao u metodu///////////////////////////");
+		Thread.sleep(10000);
+		System.out.println("Slanje emaila...");
+
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(toWho.getEmail());
+		System.out.println("adresa postavljena na " + toWho.getEmail());
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		System.out.println("posaljilac postavljen///////////");
+		mail.setSubject("Pozivnica za predstavu");
+		mail.setText("Pozdrav " + toWho.getName() + ",\n\ndobili ste pozivnicu od " + fromWho.getName() 
+				+ "za predstavu " + seat.getHall().getDate().getPlay().getName() + ",molimo potvrdite dolazak klikom na link. "
+			/*	+ "\n\n\"http://localhost:8090/myapp/users/searching/" + user.getId() + "\"" */);
+		System.out.println("tekst maila postavljen");
 		javaMailSender.send(mail);
 
 		System.out.println("Email poslat!");

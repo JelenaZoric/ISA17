@@ -75,7 +75,7 @@
 			console.log(id);
 			$(document).ready(function(){
 				$.ajax({
-					url:"http://localhost:8090/myapp/users/getUser?id=" + id
+					url:"http://localhost:8090/myapp/users/getUser1?id=" + id
 				}).then(function(data){
 					$("#name").append(data.name);
 					$("#name").append(" ");

@@ -1,4 +1,11 @@
 insert into user1(name, lastname, city, email, password, phone, enabled) values ('Jelena', 'Zokić', 'Ruma', 'joza@gmail.com', '111', '555-333', 'true')
+insert into user1(name, lastname, city, email, password, phone, enabled) values ('Teodora', 'Brasancevic', 'Ruma', 'teodora.b.95@gmail.com', 'aaa', '111-333', 'true')
+insert into user1(name, lastname, city, email, password, phone, enabled) values ('Filip', 'Non', 'Subotica', 'fil@gmail.com', 'bbb', '777-777', 'true')
+
+insert into friends(user_id, friend_id) values (1,2)
+insert into friends(user_id, friend_id) values (2,1)
+insert into friends(user_id, friend_id) values (3,1)
+insert into friends(user_id, friend_id) values (1,3)
 
 insert into theater(name, address, city, description, ttype) values ('Arena Cineplex', 'Bulevar Mihajla Pupina 3', 'Novi Sad', '', 'c')
 --insert into theater(name, address, city, description, ttype) values ('Narodno pozorište Kikinda', 'Trg srpskih dobrovoljaca 28', 'Kikinda', '', 't')

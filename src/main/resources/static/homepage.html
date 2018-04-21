@@ -49,7 +49,11 @@
 				url: "http://localhost:8090/myapp/users/getUsers"
 			}).then(function(data) {
 				for(i=0; i<data.length; i++){
-					if(data[i].email==localStorage.getItem("email")){
+					if(data[i].email==localStorage.getItem("email") &&  data[i].password==localStorage.getItem("password")){
+						if(data[i].enabled=="false"){
+							document.write("Potrebno je da potvrdite registraciju da biste se ulogovali.");
+						}
+						console.log(data[i].enabled)
 						localStorage.setItem("id", data[i].id); //nooooooooooooooovooooooooo
 						nastavak= "<a href=\"profile.html?id=" + data[i].id + "\">" + data[i].name + " " + data[i].lastname + "</a>"
 						$("p").append(nastavak);
@@ -171,8 +175,37 @@
 			<tr class="header">
 				<th></th>
 				<th></th>
+				<th></th>
 			</tr>
 		</table>
+		
+		<div class="modal fade" id="friendsModal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Izaberite prijatelja</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <form id="editForm">
+		      <div class="modal-body">
+					<table id="friendsTable" class = "table" style="width: 1200px">
+						<tr class="header">
+							<th></th>
+							<th></th>
+							<th></th>
+						</tr>
+					</table>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+		        <button type="button" class="btn btn-primary" id="edit">Potvrda</button>
+		      </div>
+		      </form>
+		    </div>
+		</div>
+	</div>
 		
 		<h3 id="reserv">Rezervisana mesta</h3>
 		<table id="reservations" class = "table" style="width: 1200px">
@@ -334,11 +367,33 @@
 							newRow = "<tr>"
 								+ "<td class=\"name\">" + data.seats[i].number + "</td>"
 								+ "<td><a onclick=\"myFunctionReserve('" + date +"'," + data.seats[i].id + ",'" + data.seats[i].reserved +"'," + data.seats[i].number +")\" href=\"#" + data.seats[i].id + "\">Rezervisi mesto</a></td>"
+								+ "<td><a onclick=\"listFriends(" + data.seats[i].number + ")\" href=\"#friendsModal\" data-toggle=\"modal\" data-target=\"#friendsModal\">Rezervisi mesto za prijatelja</a></td>"
 								+ "</tr>"
 							$("#seatTable").append(newRow)
 						}
 					}
 				});
+		}
+		
+		function listFriends(seat){
+			$.ajax({
+				url: "http://localhost:8090/myapp/users/getUser?id=" + localStorage.getItem("id")
+			}).then(function(data) {
+				for(i=0; i<data.friends.length; i++){
+					console.log(data.friends[i].name)
+					newRow = "<tr>" + "<td><a onclick=\"sendMail(" + data.friends[i].id + ", " + seat + ")\" href=\"#\">" + data.friends[i].name + " " + data.friends[i].lastname + "</a></td>"
+					 + "</tr>"
+					$("#friendsTable").append(newRow)
+				}
+			});
+		}
+		
+		function sendMail(toWho, whichSeat){
+			$.ajax({
+				url: "http://localhost:8090/myapp/users/" + localStorage.getItem("id") + "/" + toWho + "/" + whichSeat 
+			}).then(function(data) {
+				alert("Korisniku " + toWho + " je poslata email pozivnica za rezervaciju mesta " + whichSeat + ".");
+			});
 		}
 		
 		function myFunctionReserve(date, seat_id, seat_reserved, seat_num){
@@ -490,13 +545,30 @@
 	</div>
 	
 	<div id="prijatelji">
-		<table class = "table" style="width: 1200px">
+		<table id="friendsList" class = "table" style="width: 1200px">
 		<thead>
 			<tr>
 				<th><h3>Prijatelji</h3></th>
 			</tr>
 		</thead>
 		</table>
+		
+		<script>
+		$(document).ready(function(){
+			console.log("cao")
+			$.ajax({
+				url: "http://localhost:8090/myapp/users/getUser?id=" + localStorage.getItem("id")
+			}).then(function(data) {
+				console.log("hejhejhej")
+				for(i=0; i<data.friends.length; i++){
+					console.log(data.friends[i].name)
+					newRow = "<tr><td>" + data.friends[i].name + " " + data.friends[i].lastname + "</td>"
+					//+ "<td>" + data.friends[i].lastname + "</td></tr>"
+					$("#friendsList").append(newRow)
+				}
+			})
+		})
+		</script>
 	</div>
 </body>
 </html>

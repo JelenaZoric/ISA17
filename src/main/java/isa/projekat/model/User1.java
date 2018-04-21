@@ -71,6 +71,16 @@ public class User1 implements Serializable {
 	@JsonIgnore
 	private Set<UserDate> userDates = new HashSet<UserDate>();
 	
+	@ManyToMany  //ko su mu sve prijatelji
+	@JsonIgnore
+	@JoinTable(name = "friends", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "friend_id") })
+	private Set<User1> friends = new HashSet<User1>();  
+	
+	@ManyToMany  //ciji je sve prijatelj
+	@JsonIgnore
+	@JoinTable(name = "friends", joinColumns = { @JoinColumn(name = "friend_id") }, inverseJoinColumns = { @JoinColumn(name = "user_id") })
+	private Set<User1> friendOf = new HashSet<User1>();
+	
 	public User1() {
 		
 	}
@@ -243,6 +253,22 @@ public class User1 implements Serializable {
 
 	public void setUserDates(Set<UserDate> userDates) {
 		this.userDates = userDates;
+	}
+
+	public Set<User1> getFriends() {
+		return friends;
+	}
+
+	public void setFriends(Set<User1> friends) {
+		this.friends = friends;
+	}
+
+	public Set<User1> getFriendOf() {
+		return friendOf;
+	}
+
+	public void setFriendOf(Set<User1> friendOf) {
+		this.friendOf = friendOf;
 	}	
 	
 }

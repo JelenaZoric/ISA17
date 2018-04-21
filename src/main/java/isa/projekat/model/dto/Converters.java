@@ -4,6 +4,7 @@ import isa.projekat.model.DateOfPlay;
 import isa.projekat.model.Hall;
 import isa.projekat.model.Play;
 import isa.projekat.model.Theater;
+import isa.projekat.model.User1;
 
 public class Converters {
 	
@@ -53,6 +54,12 @@ public class Converters {
 		dto.setName(hall.getName());
 		dto.setNumberOfSeats(hall.getNumberOfSeats());
 		dto.setSeats(hall.getSeats());
+		return dto;
+	}
+	
+	public static UserDTO convertUserToUserDTO(User1 user){
+		UserDTO dto = new UserDTO();
+		dto.setFriends(user.getFriends());
 		return dto;
 	}
 

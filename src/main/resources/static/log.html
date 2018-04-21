@@ -56,12 +56,18 @@
 					} else {
 						console.log("neeee moze storage");
 					}
+					
+					if(result.enabled=="false"){
+						document.write("Potrebno je da potvrdite registraciju da biste se ulogovali.");
+					}
+					else {
 					if(result.role=='adminSistem'){
 						window.location.href = "http://localhost:8090/myapp/adminSystem.html";
 					}else if(result.role=='adminFunZone'){
 						window.location.href = "http://localhost:8090/myapp/adminFunZone.html?id=" + result.id;
 					}else{
 					    window.location.href = "http://localhost:8090/myapp/homepage.html";
+					}
 					}
 				}
 			});
